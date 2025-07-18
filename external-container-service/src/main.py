@@ -119,7 +119,7 @@ def main():
         slide.close()
         print(f"Results JSON: {results}")
     else:
-        client = TechcyteClient(os.environ['HOST'])
+        client = TechcyteClient()
         try:
             response = client.post_results(os.environ['TASK_ID'], results)
             print(f"Success: {response.status_code}")
