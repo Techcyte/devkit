@@ -1,0 +1,109 @@
+# Building an API Bridge
+
+Using Techcyte's classification webhook system, third-party developers can run their image classification code on their own infrastructure and report results back to Techcyte. When a user creates an image classification task, the webhook is notified with the appropriate variables listed below.
+
+## Example Code Features
+- **Modular Code**: Implement your image processing logic in `webserver.py`’s `process_image()` function.
+- **Development Mode (`local_dev=1`)**: Test locally with a mounted image, generate fake results (e.g., four boxes in a 2x2 grid), save a visualized output to `/output/result.png`, and print results.
+- **Image Handling**: Support DICOM/SVS/TIFF via `pydicom`, `openslide-python`
+- **Visualization**: In dev mode, draws red boxes on a downsampled image for result verification.
+
+## Webhook variables
+
+- **Production** (all required):
+  - `company_id`: Company identififier, useful for billing
+  - `scans`: A mapping of scan identifiers to presigned image download url
+  - `task_id`: Task identifier
+  - `case_id`: The assigned case id (unused for most calls)
+  - `model_id`: A user supplied variable used to customize webhook calls
+- **Development**: Only `local_dev=1` is required;
+
+
+## Getting Started
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/Techcyte/devkit.git
+   cd devkit/api-bridge/src
+   ```
+
+2. **Run the example**:
+
+- Start the webserver
+```bash
+# Install requirements with
+# pip install -r requirements.txt
+python webserver.py --port 3000
+```
+- Optionally process your own image (default from CMU openslide)
+```bash
+python webserver.py --image-path ./my/image/file.svs
+```
+   
+- Mock a techcyte webhook request
+```bash
+curl -X POST \
+  --url "http://localhost:3000/webhook" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "company_id": "123",
+    "scans": {
+      "1": "http://localhost:3000/image"
+    },
+    "case_id": "456",
+    "task_id": "789",
+    "model_name": "model_x",
+    "local_dev": 1
+  }'
+```
+
+3. **Customize Your Code**:
+   - Edit `webserver.py`, replacing the `process_image()` function with your classifier logic.
+   - Ensure the output matches the required schema (see below).
+
+4. **Running with Techcyte**
+
+- You'll need to generate an API key and specify when running the webserver
+
+```bash
+python webserver.py --port 3000 --api-key redacted
+```
+
+It is possible to run this example with `ngrok` (https://ngrok.com) and process Techcyte images locally for testing (`ngrok http 3000`). But a more robust solution should be implemented for production environments. 
+
+## Results Schema
+```json
+{
+  "caseResults": {
+    "mitosisCount": 4
+  },
+  "scanResults": [
+    {
+      "scanId": "8615687",
+      "geojson": {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "bbox": [x1, y1, x2, y2],
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [[[x1,y1], [x1,y2], [x2,y2], [x2,y1], [x1,y1]]]
+            },
+            "properties": {
+              "annotation_type": "tumor"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+
+## Implementation tips
+
+1. Running a GPU classifier non-stop can be expensive. Consider using a system like AWS Lambda (triggered by an API bridge event) and AWS Batch to process requests efficiently.
+
+2. Images may be in `SVS`, `TIFF`, or `DICOM ZIP` format, handle as needed.

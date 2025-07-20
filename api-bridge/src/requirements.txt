@@ -1,0 +1,7 @@
+flask[async]
+requests
+openslide-python
+pillow
+aiofiles
+asgiref
+uvicorn
