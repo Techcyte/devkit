@@ -47,13 +47,13 @@ The **External Container Service (ECS)** enables Techcyte users to run GPU-based
      ```
    - Run with GPU support:
      ```bash
-     docker run --rm --gpus all \
-    -e DEV=1 -e SCAN_ID="test_scan" \
-    -v $(pwd)/input:/input \
-    -v $(pwd)/output:/output \
-    -v $(pwd)/main.py:/app/main.py \
-    -v $(pwd)/techcyte_client.py:/app/techcyte_client.py \
-    my-docker-image:latest
+      docker run --rm --gpus all \
+      -e DEV=1 -e SCAN_ID="test_scan" \
+      -v $(pwd)/input:/input \
+      -v $(pwd)/output:/output \
+      -v $(pwd)/main.py:/app/main.py \
+      -v $(pwd)/techcyte_client.py:/app/techcyte_client.py \
+      my-docker-image:latest
      ```
    - **Output**:
      - Console: GPU test results and JSON output.
