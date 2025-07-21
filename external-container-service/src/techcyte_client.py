@@ -74,7 +74,7 @@ if __name__ == "__main__":
                                     ]
                                 ],
                             },
-                            "properties": {"annotation_type": "tumor"},
+                            "properties": {"annotation_type": "tissue_tumor_positive"},
                         },
                     ],
                 },

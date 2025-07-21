@@ -101,7 +101,7 @@ if __name__ == "__main__":
                                     ]
                                 ],
                             },
-                            "properties": {"annotation_type": "tumor"},
+                            "properties": {"annotation_type": "tissue_tumor_positive"},
                         },
                     ],
                 },
@@ -110,7 +110,9 @@ if __name__ == "__main__":
     }
 
     # Initialize client and post results
-    client = TechcyteClient(api_key_secret="your_api_key_secret_here")
+    client = TechcyteClient(
+        api_key_id="your_api_key_id_here", api_key_secret="your_api_key_secret_here"
+    )
     try:
         response = client.post_results(task_id, sample_results)
         print(f"Success: {response.status_code}")

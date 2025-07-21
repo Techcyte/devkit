@@ -92,7 +92,7 @@ def visualize_boxes(slide, geojson, output_path, downsample_factor=100):
     print(f"Visualization saved to {output_path}")
 
 
-async def background_task_handler(data):
+async def background_task_handler(data, args):
     """Handle background processing of webhook data."""
     try:
         image_path = args.image_path or DEFAULT_IMAGE_PATH
@@ -149,13 +149,14 @@ async def webhook():
     print(f"Received webhook data: {data}")
 
     # Start background task and return immediately
-    asyncio.create_task(background_task_handler(data))
+    asyncio.create_task(background_task_handler(data, app.config["args"]))
     return jsonify({"message": "Processing started"}), 200
 
 
 @app.route("/image", methods=["GET"])
 async def image():
     """Serve a mocked image file."""
+    args = app.config["args"]
     image_path = args.image_path or DEFAULT_IMAGE_PATH
 
     # If no custom path and image doesn't exist, download it
@@ -188,6 +189,9 @@ if __name__ == "__main__":
     )
     parser.add_argument("--api-key-id", type=str, help="API key ID for Techcyte client")
     args = parser.parse_args()
+
+    # Store args in app.config
+    app.config["args"] = args
 
     asgi_app = WsgiToAsgi(app)  # Wrap Flask app for ASGI compatibility
     uvicorn.run(asgi_app, host="0.0.0.0", port=args.port)
