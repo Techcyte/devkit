@@ -2,22 +2,23 @@ import os
 import requests
 from typing import Dict, Any
 
+
 class TechcyteClient:
     def __init__(self):
         """Initialize the Techcyte client with the base URL and JWT token from environment."""
-        host = os.environ.get('HOST')
+        host = os.environ.get("HOST")
         if not host:
             raise ValueError("HOST environment variable is not set")
 
         self.base_url = f"https://api.{host.rstrip('/')}/api/v3"
-        
-        self.token = os.environ.get('JWT_TOKEN')
+
+        self.token = os.environ.get("JWT_TOKEN")
         if not self.token:
             raise ValueError("JWT_TOKEN environment variable is not set")
 
         self.headers = {
-            'Authorization': f'Bearer {self.token}',
-            'Content-Type': 'application/json'
+            "Authorization": f"Bearer {self.token}",
+            "Content-Type": "application/json",
         }
 
     def post_results(self, task_id: str, results: Dict[str, Any]) -> requests.Response:
@@ -42,17 +43,16 @@ class TechcyteClient:
         except requests.RequestException as e:
             raise requests.RequestException(f"Failed to post results: {str(e)}")
 
+
 # Example usage
 if __name__ == "__main__":
     # Sample data matching the schema
 
-    task_id = os.environ['TASK_ID']
-    scan_id = os.environ['SCAN_ID']
+    task_id = os.environ["TASK_ID"]
+    scan_id = os.environ["SCAN_ID"]
 
     sample_results = {
-        "caseResults": {
-            "mitosisCount": 1000
-        },
+        "caseResults": {"mitosisCount": 1000},
         "scanResults": [
             {
                 "scanId": scan_id,
@@ -64,16 +64,22 @@ if __name__ == "__main__":
                             "bbox": [250, 100, 300, 200],
                             "geometry": {
                                 "type": "Polygon",
-                                "coordinates": [[[250,100], [250,200], [300,250], [300,100], [250,100]]]
+                                "coordinates": [
+                                    [
+                                        [250, 100],
+                                        [250, 200],
+                                        [300, 250],
+                                        [300, 100],
+                                        [250, 100],
+                                    ]
+                                ],
                             },
-                            "properties": {
-                                "annotation_type": "tumor"
-                            }
+                            "properties": {"annotation_type": "tumor"},
                         },
-                    ]
-                }
+                    ],
+                },
             }
-        ]
+        ],
     }
 
     # Initialize client and post results

@@ -72,7 +72,7 @@ def generate_fake_geojson(width, height, grid_size=2):
                 "type": "Feature",
                 "bbox": bbox,
                 "geometry": {"type": "Polygon", "coordinates": coordinates},
-                "properties": {"annotation_type": "tumor"},
+                "properties": {"annotation_type": "tissue_tumor_positive"},
             }
             features.append(feature)
     return {"type": "FeatureCollection", "features": features}
@@ -120,7 +120,11 @@ async def background_task_handler(data):
                 output_path,
             )
         else:
-            client = TechcyteClient(host=TECHCYTE_HOST, api_key=data.get("api_key"))
+            client = TechcyteClient(
+                host=TECHCYTE_HOST,
+                api_key_id=args.get("api_key_id"),
+                api_key_secret=args.get("api_key_secret"),
+            )
             try:
                 response = client.post_results(data.get("task_id"), result)
                 print(f"Success: {response.status_code}")
@@ -179,7 +183,10 @@ if __name__ == "__main__":
         "--port", type=int, default=3000, help="Port to run the Flask app"
     )
     parser.add_argument("--image-path", type=str, help="Custom path to image file")
-    parser.add_argument("--api-key", type=str, help="API key for Techcyte client")
+    parser.add_argument(
+        "--api-key-secret", type=str, help="API key secret for Techcyte client"
+    )
+    parser.add_argument("--api-key-id", type=str, help="API key ID for Techcyte client")
     args = parser.parse_args()
 
     asgi_app = WsgiToAsgi(app)  # Wrap Flask app for ASGI compatibility

@@ -76,6 +76,7 @@ The **External Container Service (ECS)** enables Techcyte users to run GPU-based
    - Push your image to the Techcyte external container registry. See internal instructions.
 
 ## Results Schema
+
 ```json
 {
   "caseResults": {
@@ -95,7 +96,7 @@ The **External Container Service (ECS)** enables Techcyte users to run GPU-based
               "coordinates": [[[x1,y1], [x1,y2], [x2,y2], [x2,y1], [x1,y1]]]
             },
             "properties": {
-              "annotation_type": "tumor"
+              "annotation_type": "tissue_tumor_positive"
             }
           }
         ]
@@ -104,6 +105,8 @@ The **External Container Service (ECS)** enables Techcyte users to run GPU-based
   ]
 }
 ```
+
+See [Techcyte Swagger Docs](https://api.app.techcyte.com/docs/#/External%20Results/ExternalResults) for more details on posting results.
 
 ## Example Output (Dev Mode)
 ```

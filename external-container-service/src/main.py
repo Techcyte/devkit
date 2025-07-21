@@ -6,6 +6,7 @@ import openslide
 from PIL import Image, ImageDraw
 from techcyte_client import TechcyteClient
 
+
 def gpu_test():
     """Run a simple GPU matrix multiplication test."""
     if not torch.cuda.is_available():
@@ -18,17 +19,21 @@ def gpu_test():
     start_time = time.time()
     c = torch.matmul(a, b)
     end_time = time.time()
-    print(f"Matrix multiplication ({size}x{size}) completed in {end_time - start_time:.4f} seconds")
+    print(
+        f"Matrix multiplication ({size}x{size}) completed in {end_time - start_time:.4f} seconds"
+    )
     print(f"Result sample: {c[0][0].item()}")
+
 
 def download_image(url, save_path):
     """Download image from a URL to save_path."""
     response = requests.get(url, stream=True)
     response.raise_for_status()
-    with open(save_path, 'wb') as f:
+    with open(save_path, "wb") as f:
         for chunk in response.iter_content(chunk_size=8192):
             f.write(chunk)
     print(f"Downloaded image to {save_path}")
+
 
 def generate_fake_geojson(width, height, grid_size=2):
     """Generate fake GeoJSON with boxes in a grid_size x grid_size grid."""
@@ -46,16 +51,12 @@ def generate_fake_geojson(width, height, grid_size=2):
             feature = {
                 "type": "Feature",
                 "bbox": bbox,
-                "geometry": {
-                    "type": "Polygon",
-                    "coordinates": coordinates
-                },
-                "properties": {
-                    "annotation_type": "tumor"
-                }
+                "geometry": {"type": "Polygon", "coordinates": coordinates},
+                "properties": {"annotation_type": "tissu_tumor_positive"},
             }
             features.append(feature)
     return {"type": "FeatureCollection", "features": features}
+
 
 def visualize_boxes(slide, geojson, output_path, downsample_factor=100):
     """Draw GeoJSON boxes on a downsampled image and save to output_path."""
@@ -65,12 +66,13 @@ def visualize_boxes(slide, geojson, output_path, downsample_factor=100):
     draw = ImageDraw.Draw(downsampled)
     # Scale boxes to the downsampled level
     level_downsample = slide.level_downsamples[level]
-    for feature in geojson['features']:
-        bbox = feature['bbox']
+    for feature in geojson["features"]:
+        bbox = feature["bbox"]
         scaled_bbox = [coord / level_downsample for coord in bbox]
         draw.rectangle(scaled_bbox, outline="red", width=2)
     downsampled.save(output_path)
     print(f"Visualization saved to {output_path}")
+
 
 def process_image(image_path):
     """
@@ -82,30 +84,35 @@ def process_image(image_path):
     slide = openslide.OpenSlide(image_path)
     width, height = slide.dimensions  # Highest resolution (level 0)
     geojson = generate_fake_geojson(width, height)
-    num_boxes = len(geojson['features'])
+    num_boxes = len(geojson["features"])
     print(f"Generated {num_boxes} fake annotations.")
     return {
         "caseResults": {"mitosisCount": num_boxes},
-        "scanResults": [{"scanId": os.environ.get('SCAN_ID', 'test_scan'), "geojson": geojson}]
+        "scanResults": [
+            {"scanId": os.environ.get("SCAN_ID", "test_scan"), "geojson": geojson}
+        ],
     }
+
 
 def main():
     gpu_test()
-    is_dev = os.environ.get('DEV') == '1'
+    is_dev = os.environ.get("DEV") == "1"
 
     # Determine image source
     if is_dev:
-        image_path = '/input/image.svs'
+        image_path = "/input/image.svs"
         if not os.path.exists(image_path):
-            raise FileNotFoundError(f"Image not found at {image_path}. Mount it via -v.")
+            raise FileNotFoundError(
+                f"Image not found at {image_path}. Mount it via -v."
+            )
         print(f"Dev mode: Processing mounted image {image_path}")
     else:
-        required_envs = ['SCAN_URL', 'HOST', 'JWT_TOKEN', 'TASK_ID', 'SCAN_ID']
+        required_envs = ["SCAN_URL", "HOST", "JWT_TOKEN", "TASK_ID", "SCAN_ID"]
         for env in required_envs:
             if not os.environ.get(env):
                 raise ValueError(f"Missing environment variable: {env}")
-        image_path = '/tmp/downloaded_image.svs'
-        download_image(os.environ['SCAN_URL'], image_path)
+        image_path = "/tmp/downloaded_image.svs"
+        download_image(os.environ["SCAN_URL"], image_path)
         print("Prod mode: Processing downloaded image")
 
     # Process image
@@ -115,17 +122,20 @@ def main():
     # Handle results
     if is_dev:
         slide = openslide.OpenSlide(image_path)
-        visualize_boxes(slide, results['scanResults'][0]['geojson'], '/output/result.png')
+        visualize_boxes(
+            slide, results["scanResults"][0]["geojson"], "/output/result.png"
+        )
         slide.close()
         print(f"Results JSON: {results}")
     else:
         client = TechcyteClient()
         try:
-            response = client.post_results(os.environ['TASK_ID'], results)
+            response = client.post_results(os.environ["TASK_ID"], results)
             print(f"Success: {response.status_code}")
         except requests.RequestException as e:
             print(f"Error posting results: {str(e)}")
             print(f"Results JSON (for debugging): {results}")
+
 
 if __name__ == "__main__":
     main()
