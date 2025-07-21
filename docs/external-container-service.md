@@ -22,9 +22,9 @@ The **External Container Service (ECS)** enables Techcyte users to run GPU-based
 ## Getting Started
 
 1. **Clone the Repository**:
-   ```bash
+   ```
    git clone https://github.com/Techcyte/devkit.git
-   cd devkit/external-container-service/src
+   cd devkit/src/external-container-service
    ```
 
 2. **Customize Your Code**:
@@ -33,20 +33,20 @@ The **External Container Service (ECS)** enables Techcyte users to run GPU-based
    - Add dependencies to `Dockerfile` if needed (e.g., `RUN pip3 install <package>`).
 
 3. **Build the Docker Image**:
-   ```bash
+   ```
    docker build -t my-docker-image:latest .
    ```
 
 4. **Test in Development Mode**:
    - Prepare input and output directories:
-     ```bash
+     ```
      mkdir -p input output
      cp /path/to/your/image.svs input/image.svs
      # OR
      curl https://openslide.cs.cmu.edu/download/openslide-testdata/Aperio/CMU-1.svs -o input/image.svs
      ```
    - Run with GPU support:
-     ```bash
+     ```
       docker run --rm --gpus all \
       -e DEV=1 -e SCAN_ID="test_scan" \
       -v $(pwd)/input:/input \
@@ -61,7 +61,7 @@ The **External Container Service (ECS)** enables Techcyte users to run GPU-based
 
 5. **Test in Production Mode (not typical)**:
    - Provide environment variables:
-     ```bash
+     ```
      docker run --rm --gpus all \
        -e SCAN_URL="https://example.com/image.svs" \
        -e HOST="ci.techcyte.com" \

@@ -52,7 +52,7 @@ def generate_fake_geojson(width, height, grid_size=2):
                 "type": "Feature",
                 "bbox": bbox,
                 "geometry": {"type": "Polygon", "coordinates": coordinates},
-                "properties": {"annotation_type": "tissu_tumor_positive"},
+                "properties": {"annotation_type": "tissue_tumor_positive"},
             }
             features.append(feature)
     return {"type": "FeatureCollection", "features": features}

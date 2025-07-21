@@ -1,0 +1,20 @@
+site_name: Development Kit
+site_url: https://devkit.techcyte.com
+theme:
+  name: material
+  palette:
+    primary: '#25216C'
+    accent: '#3563ED'
+  features:
+    - content.code.copy
+    - search.suggest
+  logo: img/logo-techcyte.svg
+extra_css:
+  - stylesheets/extra.css
+nav:
+  - Home: index.md
+  - External Container Service: external-container-service.md
+  - API Bridge: api-bridge.md
+plugins:
+  - search
+  - minify
