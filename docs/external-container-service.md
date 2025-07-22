@@ -5,22 +5,21 @@ The **External Container Service (ECS)** enables Techcyte users to run GPU-based
 We provide template files below that can be built upon and [deployed to the Techcyte infrastructure](guides/external-container-service/index.md).
 
 ## Features
-- **Modular Code**: Implement your image processing logic in `main.py`’s `process_image()` function.
-- **Development Mode (`DEV=1`)**: Test locally with a mounted image, generate fake results (e.g., four boxes in a 2x2 grid), save a visualized output to `/output/result.png`, and print results.
-- **Production Mode**: Download an image from `SCAN_URL`, process it, and post results to Techcyte using provided environment variables.
+- **Modular Code**: Implement your image processing logic in `main.py`’s `process_image()` function.grid), save a visualized output to `/output/result.png`, and print results.
+- **Test locally**: Download an image from `SCAN_URL`, process it, and post results to Techcyte using provided environment variables.
 - **GPU Support**: Uses NVIDIA CUDA with a simple GPU test via PyTorch.
 - **Image Handling**: Supports DICOM/SVS/TIFF via `pydicom`, `openslide-python`
 - **Visualization**: In dev mode, draws red boxes on a downsampled image for result verification.
 
 ## Environment Variables
-### Production (all required):
+
   - `SCAN_URL`: Presigned S3 URL for image download.
   - `HOST`: Techcyte host (e.g., `ci.techcyte.com`).
-  - `JWT_TOKEN`: Token for Techcyte API.
+  - `JWT_TOKEN`: Token for Techcyte API (required for running inside Techcyte).
+  - `API_KEY_ID`: Key id used while running locally
+  - `API_KEY_SECRET`: Key secret used while running locally
   - `TASK_ID`: Task identifier.
   - `SCAN_ID`: Scan identifier.
-### Development:
-  - Only `DEV=1` is required; `SCAN_ID` defaults to `test_scan` if unset.
 
 ## Step-by-step instructions
 
@@ -40,43 +39,51 @@ We provide template files below that can be built upon and [deployed to the Tech
   docker build -t my-docker-image:latest .
   ```
 
-### 4. Test in Development Mode
-   - Prepare input and output directories:
-     ```
-     mkdir -p input output
-     cp /path/to/your/image.svs input/image.svs
-     # OR
-     curl https://openslide.cs.cmu.edu/download/openslide-testdata/Aperio/CMU-1.svs -o input/image.svs
-     ```
-   - Run with GPU support:
-     ```
-      docker run --rm --gpus all \
-      -e DEV=1 -e SCAN_ID="test_scan" \
-      -v $(pwd)/input:/input \
-      -v $(pwd)/output:/output \
-      -v $(pwd)/main.py:/app/main.py \
-      -v $(pwd)/techcyte_client.py:/app/techcyte_client.py \
-      my-docker-image:latest
-     ```
-   - **Output**:
-     - Console: GPU test results and JSON output.
-     - File: `/output/result.png` (downsampled image with red boxes).
-
-### 5. Test in Production Mode (not typical)
+### 4. Test in Production Mode
    - Provide environment variables:
      ```
      docker run --rm --gpus all \
-       -e SCAN_URL="https://example.com/image.svs" \
        -e HOST="ci.techcyte.com" \
-       -e JWT_TOKEN="your-token" \
        -e TASK_ID="your-task-id" \
        -e SCAN_ID="your-scan-id" \
+       -e SCAN_URL="https://example.com/image.svs" \
+       -e API_KEY_ID="your-api-key-id" \
+       -e API_KEY_SECRET="your-api-key-secret" \
        my-docker-image:latest
      ```
+   - If running on production `HOST="app.techcyte.com"`, CI `HOST="ci.techcyte.com"`
+   - See [Creating a debug request](./guides/creating-a-debug-request/index.md) to obtain `TASK_ID`, `SCAN_ID` and `SCAN_URL` values
+   - See [Creating an API key](./guides/creating-an-api-key/index.md) to obtain the api key id and secret
    - Downloads the image, processes it, and posts results to Techcyte. Prints results if posting fails.
 
 ### 6. Deploy
    - Push your image to the Techcyte external container registry. See instructions [here](guides/external-container-service/index.md).
+
+
+## Example Output (local output)
+```
+CUDA is available! Using GPU: Tesla T4
+Matrix multiplication (1000x1000) completed in 0.0246 seconds
+Result sample: 21.861495971679688
+Processing image: /input/image.svs
+Generated 4 fake annotations
+Visualization saved to /output/result.png
+Results JSON: {"caseResults": {"mitosisCount": 4}, "scanResults": [{"scanId": "test_scan", "geojson": {...}}]}
+```
+
+You should have an image with a 2x2 grid or red squares.
+
+
+## Troubleshooting
+- **No GPU**:
+  - Ensure NVIDIA Docker is installed (`nvidia-container-toolkit`).
+  - Verify `--gpus all` is used.
+  - Check CUDA compatibility (image uses CUDA 11.8; ensure your GPU supports it).
+  - If error persists, run without `--gpus all` to test CPU fallback.
+- **Image Issues**: Ensure the input file is a valid SVS or TIFF. OpenSlide supports both.
+- **Posting Errors**: Verify environment variables; invalid tokens print results for debugging.
+- **Large Images**: OpenSlide handles large SVS files efficiently. For other formats (e.g., DICOM), add `pip3 install pydicom` to the Dockerfile.
+- **Memory Issues**: Large images may require significant RAM; ensure your Docker host has enough resources.
 
 ## Results Schema
 
@@ -110,28 +117,3 @@ We provide template files below that can be built upon and [deployed to the Tech
 ```
 
 See [Techcyte Swagger Docs](https://api.app.techcyte.com/docs/#/External%20Results/ExternalResults) for more details on posting results.
-
-## Example Output (Dev Mode)
-```
-CUDA is available! Using GPU: Tesla T4
-Matrix multiplication (1000x1000) completed in 0.0246 seconds
-Result sample: 21.861495971679688
-Processing image: /input/image.svs
-Generated 4 fake annotations
-Visualization saved to /output/result.png
-Results JSON: {"caseResults": {"mitosisCount": 4}, "scanResults": [{"scanId": "test_scan", "geojson": {...}}]}
-```
-
-You should have an image with a 2x2 grid or red squares.
-
-
-## Troubleshooting
-- **No GPU**:
-  - Ensure NVIDIA Docker is installed (`nvidia-container-toolkit`).
-  - Verify `--gpus all` is used.
-  - Check CUDA compatibility (image uses CUDA 11.8; ensure your GPU supports it).
-  - If error persists, run without `--gpus all` to test CPU fallback.
-- **Image Issues**: Ensure the input file is a valid SVS or TIFF. OpenSlide supports both.
-- **Posting Errors**: Verify environment variables; invalid tokens print results for debugging.
-- **Large Images**: OpenSlide handles large SVS files efficiently. For other formats (e.g., DICOM), add `pip3 install pydicom` to the Dockerfile.
-- **Memory Issues**: Large images may require significant RAM; ensure your Docker host has enough resources.

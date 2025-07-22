@@ -71,7 +71,9 @@ nav:
     - Techcyte App: 
       - Bulk Import Tool: guides/bulk-import-tool/index.md
       - Creating a case: guides/creating-a-case/index.md
-      - Creating an AI task type: guides/creating-an-ai-request-type/index.md
+      - Creating a debug request: guides/creating-a-debug-request/index.md
+      - Creating an AI request type: guides/creating-an-ai-request-type/index.md
+      - Creating an API key: guides/creating-an-api-key/index.md
       - External Container Service: guides/external-container-service/index.md
 
     

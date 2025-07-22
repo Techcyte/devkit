@@ -58,22 +58,6 @@ def generate_fake_geojson(width, height, grid_size=2):
     return {"type": "FeatureCollection", "features": features}
 
 
-def visualize_boxes(slide, geojson, output_path, downsample_factor=100):
-    """Draw GeoJSON boxes on a downsampled image and save to output_path."""
-    # Use a lower resolution level for visualization to save memory
-    level = slide.get_best_level_for_downsample(downsample_factor)
-    downsampled = slide.read_region((0, 0), level, slide.level_dimensions[level])
-    draw = ImageDraw.Draw(downsampled)
-    # Scale boxes to the downsampled level
-    level_downsample = slide.level_downsamples[level]
-    for feature in geojson["features"]:
-        bbox = feature["bbox"]
-        scaled_bbox = [coord / level_downsample for coord in bbox]
-        draw.rectangle(scaled_bbox, outline="red", width=2)
-    downsampled.save(output_path)
-    print(f"Visualization saved to {output_path}")
-
-
 def process_image(image_path):
     """
     Customize this function with your image processing logic.
@@ -96,45 +80,37 @@ def process_image(image_path):
 
 def main():
     gpu_test()
-    is_dev = os.environ.get("DEV") == "1"
 
-    # Determine image source
-    if is_dev:
-        image_path = "/input/image.svs"
-        if not os.path.exists(image_path):
-            raise FileNotFoundError(
-                f"Image not found at {image_path}. Mount it via -v."
-            )
-        print(f"Dev mode: Processing mounted image {image_path}")
-    else:
-        required_envs = ["SCAN_URL", "HOST", "JWT_TOKEN", "TASK_ID", "SCAN_ID"]
-        for env in required_envs:
-            if not os.environ.get(env):
-                raise ValueError(f"Missing environment variable: {env}")
-        image_path = "/tmp/downloaded_image.svs"
-        download_image(os.environ["SCAN_URL"], image_path)
-        print("Prod mode: Processing downloaded image")
+    required_envs = ["SCAN_URL", "HOST", "TASK_ID", "SCAN_ID"]
+    for env in required_envs:
+        if not os.environ.get(env):
+            raise ValueError(f"Missing environment variable: {env}")
+    image_path = "/tmp/downloaded_image.svs"
+    download_image(os.environ["SCAN_URL"], image_path)
+    print("Prod mode: Processing downloaded image")
 
     # Process image
     print(f"Processing image: {image_path}")
     results = process_image(image_path)
 
-    # Handle results
-    if is_dev:
-        slide = openslide.OpenSlide(image_path)
-        visualize_boxes(
-            slide, results["scanResults"][0]["geojson"], "/output/result.png"
-        )
-        slide.close()
-        print(f"Results JSON: {results}")
-    else:
-        client = TechcyteClient()
-        try:
-            response = client.post_results(os.environ["TASK_ID"], results)
-            print(f"Success: {response.status_code}")
-        except requests.RequestException as e:
-            print(f"Error posting results: {str(e)}")
-            print(f"Results JSON (for debugging): {results}")
+    print("Image processing complete. Posting to techcyte...")
+    HOST = os.environ["HOST"]
+    API_KEY_ID = os.environ.get("API_KEY_ID")
+    API_KEY_SECRET = os.environ.get("API_KEY_SECRET")
+    JWT_TOKEN = os.environ.get("JWT_TOKEN")
+
+    client = TechcyteClient(
+        host=HOST,
+        jwt_token=JWT_TOKEN,
+        api_key_id=API_KEY_ID,
+        api_key_secret=API_KEY_SECRET,
+    )
+    try:
+        response = client.post_results(os.environ["TASK_ID"], results)
+        print(f"Success: {response.status_code}")
+    except requests.RequestException as e:
+        print(f"Error posting results: {str(e)}")
+        print(f"Results JSON (for debugging): {results}")
 
 
 if __name__ == "__main__":
