@@ -203,9 +203,9 @@ __marimo__/
 .streamlit/secrets.toml
 
 # no images
-*.svs
-*.png
-*.jpg
-*.tiff
-*.tif
-*.dcm
+src/**/*.svs
+src/**/*.png
+src/**/*.jpg
+src/**/*.tiff
+src/**/*.tif
+src/**/*.dcm
