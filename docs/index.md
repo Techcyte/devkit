@@ -1,34 +1,22 @@
-# Techcyte Devkit
+# Techcyte development kit
 
-This repository provides example documentation and code for interfacing with Techcyte's system. Whether you're integrating with our external container service or leveraging our API bridge, you'll find practical resources to get started quickly.
+This site provides documentation and example code for interfacing with Techcyte's system. Topics are organized into subsections. Explore the sections in the navbar above, for the resources you need.
 
-## Overview
-
-This repository is organized into subdirectories, each containing specific examples and documentation for different components of Techcyte's system. Explore the sections below to find the resources you need.
-
-## Getting Started
-
-1. **Clone the Repository**:
-   ```
-   git clone https://github.com/Techcyte/devkit.git
-   ```
-2. Navigate to the relevant subdirectory for the component you're interested in.
-3. Follow the instructions in the respective listings below for setup and usage.
 
 ## Available Resources
 
-### External Container Service
-- **Page**: [`external-container-service`](./external-container-service.md)
-- **Description**: Contains example code and documentation for deploying and managing containers using Techcyte's external container service. Includes docker image examples, scripts, and best practices.
+### [External Container Service](./external-container-service.md)
+Contains example code and documentation for creating your own classification container for deployment in Techcyte's external container service.
 
 
-### API Bridge
-- **Page**: [`api-bridge`](./api-bridge.md)
-- **Description**: Provides sample code and guides for integrating with Techcyte's API bridge. Includes API client examples, and request/response samples.
+### [API Bridge](./api-bridge.md)
+Provides an example webserver for interfacing with Techcyte as an external model provider. Includes a Techcyte API client, and request/response samples.
 
+### [Technical Guides](./guides/index.md)
+A listing of how-to documents when working on the Techcyte App.
 
 ## Prerequisites
 
 - Ensure you have access to Techcyte's system credentials or API keys.
-- Install any required dependencies as outlined in the individual READMEs.
+- Install any required dependencies as outlined in the individual docs.
 - Familiarity with basic programming concepts and tools like Git, python, and docker.
