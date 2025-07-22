@@ -53,12 +53,11 @@ From here, we'll need to configure your cases to use your newly created runnable
 * **Configure the case algorithm:** Name your algorithm, select "Container" as the Model provider, and select your container.  
   ![](images/image15.png)
 
-### 4: Run an AI Task on your slide
+### 4: Run an AI Request on your slide
 
-* **Create an AI Task:** From the case view, right click on your scanned image and select "AI Task"  
+* **Create an AI Request:** From the case view, right click on your scanned image and select "AI Task" or "AI Request" 
   ![](images/image2.png)
-  NOTE: If an AI models Task type is not available, you'll need to create one in Company Settings \-\> Configuration \-\> Request Types (shown below)  
-  ![](images/image1.png)
+  NOTE: If an "AI models" request type is not available, you'll need to create one, see [Creating an AI request type](../creating-an-ai-request-type/index.md)
 * Submit the request: From the Create request \-\> AI Task dialog, select your Case algorithm (My GPU Container here) as the AI model and create the request  
   ![](images/image8.png)
 

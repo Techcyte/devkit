@@ -1,6 +1,8 @@
-# External Container Service Template
+# External Container Service Docker Template
 
 The **External Container Service (ECS)** enables Techcyte users to run GPU-based batch processing by uploading custom Docker containers as classifiers. This repository provides a template for developing and testing your container locally or in a production-like environment.
+
+We provide template files below that can be built upon and [deployed to the Techcyte infrastructure](guides/external-container-service/index.md).
 
 ## Features
 - **Modular Code**: Implement your image processing logic in `main.py`’s `process_image()` function.
@@ -11,33 +13,34 @@ The **External Container Service (ECS)** enables Techcyte users to run GPU-based
 - **Visualization**: In dev mode, draws red boxes on a downsampled image for result verification.
 
 ## Environment Variables
-- **Production** (all required):
+### Production (all required):
   - `SCAN_URL`: Presigned S3 URL for image download.
   - `HOST`: Techcyte host (e.g., `ci.techcyte.com`).
   - `JWT_TOKEN`: Token for Techcyte API.
   - `TASK_ID`: Task identifier.
   - `SCAN_ID`: Scan identifier.
-- **Development**: Only `DEV=1` is required; `SCAN_ID` defaults to `test_scan` if unset.
+### Development:
+  - Only `DEV=1` is required; `SCAN_ID` defaults to `test_scan` if unset.
 
-## Getting Started
+## Step-by-step instructions
 
-1. **Clone the Repository**:
+### 1. Clone the Repository:
    ```
    git clone https://github.com/Techcyte/devkit.git
    cd devkit/src/external-container-service
    ```
 
-2. **Customize Your Code**:
+### 2. Customize Your Code
    - Edit `main.py`, replacing the `process_image()` function with your classifier logic.
    - Ensure the output matches the required schema (see below).
    - Add dependencies to `Dockerfile` if needed (e.g., `RUN pip3 install <package>`).
 
-3. **Build the Docker Image**:
-   ```
-   docker build -t my-docker-image:latest .
-   ```
+### 3. Build the Docker Image
+  ```
+  docker build -t my-docker-image:latest .
+  ```
 
-4. **Test in Development Mode**:
+### 4. Test in Development Mode
    - Prepare input and output directories:
      ```
      mkdir -p input output
@@ -59,7 +62,7 @@ The **External Container Service (ECS)** enables Techcyte users to run GPU-based
      - Console: GPU test results and JSON output.
      - File: `/output/result.png` (downsampled image with red boxes).
 
-5. **Test in Production Mode (not typical)**:
+### 5. Test in Production Mode (not typical)
    - Provide environment variables:
      ```
      docker run --rm --gpus all \
@@ -72,8 +75,8 @@ The **External Container Service (ECS)** enables Techcyte users to run GPU-based
      ```
    - Downloads the image, processes it, and posts results to Techcyte. Prints results if posting fails.
 
-6. **Deploy**:
-   - Push your image to the Techcyte external container registry. See instructions [here](/guides/external-container-service/).
+### 6. Deploy
+   - Push your image to the Techcyte external container registry. See instructions [here](guides/external-container-service/index.md).
 
 ## Results Schema
 
