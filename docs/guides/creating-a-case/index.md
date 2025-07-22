@@ -26,4 +26,4 @@ Click your case link for the details view.
 
   ![](images/image4.png)
 
-You can now add scans for processing. See the [Bulk Import Tool page](../bulk-import-tool/index.md).
+You can now add scans for processing. See the [Bulk Scan Import Tool page](../bulk-import-tool/index.md).

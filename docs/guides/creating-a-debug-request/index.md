@@ -32,7 +32,7 @@ Select your case. If you do not have one see [creating a case](../creating-a-cas
 
 ### 5. Create a new AI request
 
-On the image in your case (if you don't have one, use the [bulk import tool](../bulk-import-tool/index.md)), right click, select "Create request" -> "AI Request". If you don't see this, see [creating an AI request type](../creating-an-ai-request-type/index.md).
+On the image in your case (if you don't have one, use the [bulk scan import tool](../bulk-import-tool/index.md)), right click, select "Create request" -> "AI Request". If you don't see this, see [creating an AI request type](../creating-an-ai-request-type/index.md).
 
   ![](images/image5.png) 
 

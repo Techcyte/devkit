@@ -1,4 +1,4 @@
-# Techcyte development kit
+# Techcyte Development Kit
 
 This site provides documentation and example code for interfacing with Techcyte's system. Topics are organized into subsections. Explore the sections in the navbar above, for the resources you need.
 

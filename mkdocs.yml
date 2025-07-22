@@ -69,7 +69,7 @@ nav:
   - Guides:
     - Intro: guides/index.md
     - Techcyte App: 
-      - Bulk Import Tool: guides/bulk-import-tool/index.md
+      - Bulk Scan Import Tool: guides/bulk-import-tool/index.md
       - Creating a case: guides/creating-a-case/index.md
       - Creating a debug request: guides/creating-a-debug-request/index.md
       - Creating an AI request type: guides/creating-an-ai-request-type/index.md

@@ -1,4 +1,4 @@
-# Techcyte: Bulk Import Tool
+# Techcyte: Bulk Scan Import Tool
 
 ## I. Introduction
 The Bulk Import Tool is a utility provided to Techcyte users as a way to upload scanned image files. This tool supports DICOM, SVS, and TIFF uploads with optional metadata de-identification. De-identification occurs on the user's machine - no data is uploaded to Techcyte until the final upload page.

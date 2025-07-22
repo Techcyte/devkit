@@ -5,7 +5,7 @@ The **External Container Service (ECS)** enables Techcyte users to run GPU-based
 We provide template files below that can be built upon and [deployed to the Techcyte infrastructure](guides/external-container-service/index.md).
 
 ## Features
-- **Modular Code**: Implement your image processing logic in `main.py`’s `process_image()` function.grid), save a visualized output to `/output/result.png`, and print results.
+- **Modular Code**: Implement your image processing logic in `main.py`’s `process_image()` function.grid
 - **Test locally**: Download an image from `SCAN_URL`, process it, and post results to Techcyte using provided environment variables.
 - **GPU Support**: Uses NVIDIA CUDA with a simple GPU test via PyTorch.
 - **Image Handling**: Supports DICOM/SVS/TIFF via `pydicom`, `openslide-python`
@@ -39,7 +39,7 @@ We provide template files below that can be built upon and [deployed to the Tech
   docker build -t my-docker-image:latest .
   ```
 
-### 4. Test in Production Mode
+### 4. Test locally
    - Provide environment variables:
      ```
      docker run --rm --gpus all \
@@ -56,7 +56,7 @@ We provide template files below that can be built upon and [deployed to the Tech
    - See [Creating an API key](./guides/creating-an-api-key/index.md) to obtain the api key id and secret
    - Downloads the image, processes it, and posts results to Techcyte. Prints results if posting fails.
 
-### 6. Deploy
+### 5. Deploy
    - Push your image to the Techcyte external container registry. See instructions [here](guides/external-container-service/index.md).
 
 
