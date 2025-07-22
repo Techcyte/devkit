@@ -8,7 +8,7 @@ The External Container Service (ECS) is a standalone product designed to provide
 
 In order to use the ECS you'll need:
 
-1. A Techcyte account with appropriate permission (Lab Admin, etc.)  
+1. A Techcyte account with appropriate permission (Lab Admin or Lab User)  
 2. The experimental company "External Container Service" feature flag turned on
 
 ## III. Step-by-Step Instructions

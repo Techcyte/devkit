@@ -5,7 +5,7 @@ The Bulk Import Tool is a utility provided to Techcyte users as a way to upload 
 
 ## II. Prerequisites
 In order to use the Bulk Import Tool you'll need:
-- A Techcyte account with appropriate permission (Uploader, etc.)
+- A Techcyte account with appropriate permission (Lab admin OR Lab user)
 - The experimental company "Bulk import tool" feature flag turned on
 
 ## III. Step-by-Step Instructions

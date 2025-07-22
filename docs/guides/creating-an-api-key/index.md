@@ -20,7 +20,7 @@ In the API Clients section, click "Add API client".
 
 ### 3. Configure the API client
 
-Configure and create.
+Configure and create. To report external results and complete a task you must have `Lab Admin` or `Lab User` permission.
 
   ![](images/image3.png)
 
