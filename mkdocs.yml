@@ -1,5 +1,9 @@
 site_name: Development Kit
 site_url: https://devkit.techcyte.com
+
+repo_name: techcyte/devkit
+repo_url: https://github.com/techcyte/devkit
+
 theme:
   name: material
   palette:
@@ -8,13 +12,70 @@ theme:
   features:
     - content.code.copy
     - search.suggest
+    - content.tabs.link
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - content.tabs.link
   logo: img/logo-techcyte.svg
+  favicon: img/favicon.ico
+  icon:
+    repo: fontawesome/brands/github
+  toc:
+    permalink: true
+    slugify: !!python/name:pymdownx.slugs.uslugify
+    toc_depth: 3
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed
+  - pymdownx.arithmatex:
+      generic: true
+  - admonition
+  - footnotes
+  - attr_list
+  - md_in_html
+  - tables
+
 extra_css:
   - stylesheets/extra.css
-nav:
-  - Home: index.md
-  - External Container Service: external-container-service.md
-  - API Bridge: api-bridge.md
+
 plugins:
   - search
   - minify
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: true
+            docstring_style: numpy
+  - mkdocs-jupyter:
+      include_source: True
+      execute: false
+      ignore_h1_titles: True
+      show_input: True
+      theme: light
+      kernel_name: python3
+      allow_errors: false
+      include_requirejs: true
+      no_input: false
+
+nav:
+  - Home: index.md
+  - API Bridge: api-bridge.md
+  - External Container Service: external-container-service.md
+  - Guides:
+    - Intro: guides/index.md
+    - Techcyte App: 
+      - Bulk Import Tool: guides/bulk-import-tool/index.md
+      - Creating a case: guides/creating-a-case/index.md
+      - External Container Service: guides/external-container-service/index.md
+
+    
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/techcyte/devkit

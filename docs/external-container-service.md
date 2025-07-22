@@ -73,7 +73,7 @@ The **External Container Service (ECS)** enables Techcyte users to run GPU-based
    - Downloads the image, processes it, and posts results to Techcyte. Prints results if posting fails.
 
 6. **Deploy**:
-   - Push your image to the Techcyte external container registry. See internal instructions.
+   - Push your image to the Techcyte external container registry. See instructions [here](/guides/external-container-service/).
 
 ## Results Schema
 
