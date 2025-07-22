@@ -209,3 +209,4 @@ src/**/*.jpg
 src/**/*.tiff
 src/**/*.tif
 src/**/*.dcm
+src/api-bridge/cache/*

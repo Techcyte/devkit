@@ -9,7 +9,6 @@ We provide template files below that can be built upon and [deployed to the Tech
 - **Test locally**: Download an image from `SCAN_URL`, process it, and post results to Techcyte using provided environment variables.
 - **GPU Support**: Uses NVIDIA CUDA with a simple GPU test via PyTorch.
 - **Image Handling**: Supports DICOM/SVS/TIFF via `pydicom`, `openslide-python`
-- **Visualization**: In dev mode, draws red boxes on a downsampled image for result verification.
 
 ## Environment Variables
 

@@ -1,7 +1,8 @@
-flask[async]
+fastapi
+uvicorn
+aiohttp
+aiofiles
 requests
 openslide-python
 pillow
-aiofiles
 asgiref
-uvicorn

@@ -4,9 +4,8 @@ Using Techcyte's classification webhook system, third-party developers can run t
 
 ## Example Code Features
 - **Modular Code**: Implement your image processing logic in `webserver.py`’s `process_image()` function.
-- **Development Mode (`local_dev=1`)**: Test locally with a mounted image, generate fake results (e.g., four boxes in a 2x2 grid), save a visualized output to `/output/result.png`, and print results.
 - **Image Handling**: Support DICOM/SVS/TIFF via `pydicom`, `openslide-python`
-- **Visualization**: In dev mode, draws red boxes on a downsampled image for result verification.
+- **Visualization**: On the Techcyte app, four box objects are drawn on the image for result verification.
 
 ## Webhook variables
 
@@ -16,7 +15,7 @@ Using Techcyte's classification webhook system, third-party developers can run t
   - `task_id`: Task identifier
   - `case_id`: The assigned case id (unused for most calls)
   - `model_id`: A user supplied variable used to customize webhook calls
-- **Development**: Only `local_dev=1` is required;
+
 
 
 ## Getting Started
@@ -29,31 +28,26 @@ Using Techcyte's classification webhook system, third-party developers can run t
 
 2. **Run the example**:
 
+- You'll need to generate an API key and specify when running the webserver. See [creating an API key](./guides/creating-an-api-key/index.md)
 - Start the webserver
 ```
 # Install requirements with
 # pip install -r requirements.txt
-python webserver.py --port 3000
-```
-- Optionally process your own image (default from CMU openslide)
-```
-python webserver.py --image-path ./my/image/file.svs
+python webserver.py --port 3000 --api-key-id e-_tfr-redacted-Vhjt --api-key-secret FNI-redacted-LvH
 ```
    
 - Mock a techcyte webhook request
 ```
-curl -X POST \
-  --url "http://localhost:3000/webhook" \
-  --header "Content-Type: application/json" \
-  --data '{
-    "company_id": "123",
-    "scans": {
-      "1": "http://localhost:3000/image"
-    },
-    "case_id": "456",
-    "task_id": "789",
-    "model_name": "model_x",
-    "local_dev": 1
+ curl -X POST --url "http://localhost:3000/webhook" \  
+ --header "Content-Type: application/json" \
+ --data '{ \
+    "company_id": "2380941", \
+    "scans": { \
+      "8823846": "https://techcyteci-preprod.s3.us-west-2.amazonaws.com/redacted" \
+    }, \
+    "case_id": "aHVtYW5DYXNlOjI0MjEzNjY=", \
+    "task_id": "dGFzazoxODU4MzU=", \
+    "model_name": "" \
   }'
 ```
 
@@ -61,13 +55,6 @@ curl -X POST \
    - Edit `webserver.py`, replacing the `process_image()` function with your classifier logic.
    - Ensure the output matches the required schema (see below).
 
-4. **Running with Techcyte**
-
-- You'll need to generate an API key and specify when running the webserver. See [creating an API key](./guides/creating-an-api-key/index.md)
-
-```
-python webserver.py --port 3000 --api-key-id e-_tfr-redacted-Vhjt --api-key-secret FNI-redacted-LvH
-```
 
 It is possible to run this example with `ngrok` (https://ngrok.com) and process Techcyte images locally for testing (`ngrok http 3000`). But a more robust solution should be implemented for production environments. 
 

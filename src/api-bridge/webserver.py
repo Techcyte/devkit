@@ -1,58 +1,63 @@
 import argparse
 import os
 import json
-import requests
-from flask import Flask, request, jsonify
-import asyncio
-import openslide
-from PIL import ImageDraw
+import aiohttp
 import aiofiles
+from fastapi import FastAPI, Request, HTTPException
 from concurrent.futures import ThreadPoolExecutor
 import uvicorn
-from asgiref.wsgi import WsgiToAsgi
+import openslide
+import logging
+from urllib.parse import urlparse
+import asyncio
 
 from techcyte_client import TechcyteClient
 
-app = Flask(__name__)
-executor = ThreadPoolExecutor()
-
-# Default image URL and cache path
-DEFAULT_IMAGE_URL = (
-    "https://openslide.cs.cmu.edu/download/openslide-testdata/Aperio/CMU-1.svs"
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
+logger = logging.getLogger(__name__)
+
+app = FastAPI()
+executor = ThreadPoolExecutor(max_workers=4)  # Adjust based on CPU cores
+
 CACHE_DIR = "cache"
-DEFAULT_IMAGE_PATH = os.path.join(CACHE_DIR, "image.svs")
-
-TECHCYTE_HOST = "app.techcyte.com"  # OR 'ci.techcyte.com' for CI testing
+TECHCYTE_HOST = "ci.techcyte.com"  # OR 'app.techcyte.com' for production
 
 
-def download_image(url, save_path):
-    """Download image from a URL to save_path."""
-    response = requests.get(url, stream=True)
-    response.raise_for_status()
-    with open(save_path, "wb") as f:
-        for chunk in response.iter_content(chunk_size=8192):
-            f.write(chunk)
-    print(f"Downloaded image to {save_path}")
+async def download_image(url, save_path):
+    """Download image asynchronously from a URL to save_path."""
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            response.raise_for_status()
+            async with aiofiles.open(save_path, "wb") as f:
+                async for chunk in response.content.iter_chunked(8192):
+                    await f.write(chunk)
+    logger.info(f"Downloaded image to {save_path}")
 
 
 def process_image(image_path, data):
-    """
-    Customize this function with your image processing logic.
-    Input: Path to SVS or TIFF file.
-    Output: Dict with 'caseResults' and 'scanResults' per schema.
-    Example: Places 4 boxes in a 2x2 grid on the highest resolution level.
-    """
-    slide = openslide.OpenSlide(image_path)
-    width, height = slide.dimensions  # Highest resolution (level 0)
-    geojson = generate_fake_geojson(width, height)
-    num_boxes = len(geojson["features"])
-    print(f"Generated {num_boxes} fake annotations.")
-    print("GeoJSON:", json.dumps(geojson, indent=2))
-    return {
-        "caseResults": {"mitosisCount": num_boxes},
-        "scanResults": [{"scanId": data.get("scan_id"), "geojson": geojson}],
-    }
+    """Process image and generate results."""
+    slide = None
+    try:
+        scans = data.get("scans", {})
+        if not scans:
+            raise ValueError("No scans provided in data")
+        scan_id, _ = next(iter(scans.items()))  # First scan
+        slide = openslide.OpenSlide(image_path)
+        width, height = slide.dimensions
+        geojson = generate_fake_geojson(width, height)
+        num_boxes = len(geojson["features"])
+        logger.info(f"Generated {num_boxes} fake annotations for {image_path}")
+        logger.debug(f"GeoJSON: {json.dumps(geojson, indent=2)}")
+        return {
+            "caseResults": {"mitosisCount": num_boxes},
+            "scanResults": [{"scanId": scan_id, "geojson": geojson}],
+        }
+    finally:
+        if slide:
+            slide.close()  # Ensure slide is closed to free resources
 
 
 def generate_fake_geojson(width, height, grid_size=2):
@@ -78,62 +83,41 @@ def generate_fake_geojson(width, height, grid_size=2):
     return {"type": "FeatureCollection", "features": features}
 
 
-def visualize_boxes(slide, geojson, output_path, downsample_factor=100):
-    """Draw GeoJSON boxes on a downsampled image and save to output_path."""
-    level = slide.get_best_level_for_downsample(downsample_factor)
-    downsampled = slide.read_region((0, 0), level, slide.level_dimensions[level])
-    draw = ImageDraw.Draw(downsampled)
-    level_downsample = slide.level_downsamples[level]
-    for feature in geojson["features"]:
-        bbox = feature["bbox"]
-        scaled_bbox = [coord / level_downsample for coord in bbox]
-        draw.rectangle(scaled_bbox, outline="red", width=2)
-    downsampled.save(output_path)
-    print(f"Visualization saved to {output_path}")
-
-
-async def background_task_handler(data, args):
+async def background_task_handler(data):
     """Handle background processing of webhook data."""
     try:
-        image_path = args.image_path or DEFAULT_IMAGE_PATH
-        # Ensure cache directory exists
-        if not args.image_path and not os.path.exists(image_path):
-            os.makedirs(CACHE_DIR, exist_ok=True)
-            download_image(DEFAULT_IMAGE_URL, image_path)
+        scans = data.get("scans", {})
+        if not scans:
+            raise ValueError("No scans provided in data")
+        scan_id, scan_url = next(iter(scans.items()))
 
-        # Process image
-        result = await asyncio.get_event_loop().run_in_executor(
-            executor, process_image, image_path, data
+        os.makedirs(CACHE_DIR, exist_ok=True)
+        # Extract file extension from URL
+        parsed_url = urlparse(scan_url)
+        file_ext = os.path.splitext(parsed_url.path)[1] or ".svs"
+        image_path = os.path.join(CACHE_DIR, f"image{file_ext}")
+
+        logger.info(f"Starting download for {scan_url}")
+        await download_image(scan_url, image_path)
+
+        logger.info(f"Processing image {image_path}")
+        loop = asyncio.get_running_loop()
+        result = await loop.run_in_executor(executor, process_image, image_path, data)
+
+        api_key_id = os.environ.get("API_KEY_ID")
+        api_key_secret = os.environ.get("API_KEY_SECRET")
+        if not api_key_id or not api_key_secret:
+            raise ValueError("API key ID or secret not provided")
+
+        client = TechcyteClient(
+            host=TECHCYTE_HOST, api_key_id=api_key_id, api_key_secret=api_key_secret
         )
-
-        # Visualize if in local_dev mode
-        if data.get("local_dev"):
-            output_dir = "output"
-            os.makedirs(output_dir, exist_ok=True)
-            output_path = os.path.join(output_dir, "output.png")
-            slide = openslide.OpenSlide(image_path)
-            await asyncio.get_event_loop().run_in_executor(
-                executor,
-                visualize_boxes,
-                slide,
-                result["scanResults"][0]["geojson"],
-                output_path,
-            )
-        else:
-            client = TechcyteClient(
-                host=TECHCYTE_HOST,
-                api_key_id=args.get("api_key_id"),
-                api_key_secret=args.get("api_key_secret"),
-            )
-            try:
-                response = client.post_results(data.get("task_id"), result)
-                print(f"Success: {response.status_code}")
-            except requests.RequestException as e:
-                print(f"Error posting results: {str(e)}")
-                print(f"Results JSON (for debugging): {result}")
+        logger.info(f"Posting results for task {data.get('task_id')}")
+        client.post_results(data.get("task_id"), result)
 
         return {"statusCode": 200, "body": json.dumps(result)}
     except Exception as e:
+        logger.error(f"Error in background processing: {str(e)}")
         return {
             "statusCode": 500,
             "body": json.dumps(
@@ -142,56 +126,41 @@ async def background_task_handler(data, args):
         }
 
 
-@app.route("/webhook", methods=["POST"])
-async def webhook():
+@app.post("/webhook")
+async def webhook(request: Request):
     """Handle POST webhook requests."""
-    data = request.get_json() or {}
-    print(f"Received webhook data: {data}")
+    try:
+        data = await request.json()
+        logger.info(f"Received webhook data: {data}")
 
-    # Start background task and return immediately
-    asyncio.create_task(background_task_handler(data, app.config["args"]))
-    return jsonify({"message": "Processing started"}), 200
-
-
-@app.route("/image", methods=["GET"])
-async def image():
-    """Serve a mocked image file."""
-    args = app.config["args"]
-    image_path = args.image_path or DEFAULT_IMAGE_PATH
-
-    # If no custom path and image doesn't exist, download it
-    if not args.image_path and not os.path.exists(image_path):
-        os.makedirs(CACHE_DIR, exist_ok=True)
-        await asyncio.get_event_loop().run_in_executor(
-            executor, download_image, DEFAULT_IMAGE_URL, image_path
-        )
-
-    if not os.path.exists(image_path):
-        return jsonify({"message": "Image not found"}), 404
-
-    async with aiofiles.open(image_path, "rb") as f:
-        content = await f.read()
-
-    return app.response_class(response=content, status=200, mimetype="image/svs")
+        # Start background task and return immediately
+        loop = asyncio.get_running_loop()
+        loop.create_task(background_task_handler(data))
+        return {"message": "Processing started"}
+    except Exception as e:
+        logger.error(f"Webhook error: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"Invalid request: {str(e)}")
 
 
 if __name__ == "__main__":
-    # Command-line arguments
     parser = argparse.ArgumentParser(
-        description="Flask app for image processing with Techcyte API bridge"
+        description="FastAPI app for image processing with Techcyte API"
     )
-    parser.add_argument(
-        "--port", type=int, default=3000, help="Port to run the Flask app"
-    )
+    parser.add_argument("--port", type=int, default=3000, help="Port to run the app")
     parser.add_argument("--image-path", type=str, help="Custom path to image file")
     parser.add_argument(
-        "--api-key-secret", type=str, help="API key secret for Techcyte client"
+        "--api-key-secret", type=str, required=True, help="API key secret"
     )
-    parser.add_argument("--api-key-id", type=str, help="API key ID for Techcyte client")
+    parser.add_argument("--api-key-id", type=str, required=True, help="API key ID")
     args = parser.parse_args()
 
-    # Store args in app.config
-    app.config["args"] = args
+    # Set environment variables for worker processes
+    os.environ["API_KEY_ID"] = args.api_key_id
+    os.environ["API_KEY_SECRET"] = args.api_key_secret
+    # Optional: os.environ['IMAGE_PATH'] = args.image_path or ''
 
-    asgi_app = WsgiToAsgi(app)  # Wrap Flask app for ASGI compatibility
-    uvicorn.run(asgi_app, host="0.0.0.0", port=args.port)
+    logger.info(f"Initialized API_KEY_ID: {args.api_key_id}")
+    logger.info(f"Initialized API_KEY_SECRET: {args.api_key_secret}")
+
+    # Run Uvicorn with correct import string (file is named webserver.py)
+    uvicorn.run("webserver:app", host="0.0.0.0", port=args.port, workers=2)
