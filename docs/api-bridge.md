@@ -9,7 +9,7 @@ Using Techcyte's classification webhook system, third-party developers can run t
 
 ## Webhook variables
 
-- **Production** (all required):
+- **Supplied in Production**:
   - `company_id`: Company identififier, useful for billing
   - `scans`: A mapping of scan identifiers to presigned image download url
   - `task_id`: Task identifier
@@ -17,16 +17,15 @@ Using Techcyte's classification webhook system, third-party developers can run t
   - `model_id`: A user supplied variable used to customize webhook calls
 
 
-
 ## Getting Started
 
-1. **Clone the Repository**:
+### 1. Clone the Repository:
    ```
    git clone https://github.com/Techcyte/devkit.git
    cd devkit/src/api-bridge
    ```
 
-2. **Run the example**:
+### 2. Run the example:
 
 - You'll need to generate an API key and specify when running the webserver. See [creating an API key](./guides/creating-an-api-key/index.md)
 - Start the webserver
@@ -51,7 +50,7 @@ python webserver.py --port 3000 --api-key-id e-_tfr-redacted-Vhjt --api-key-secr
   }'
 ```
 
-3. **Customize Your Code**:
+### 3. Customize Your Code:
    - Edit `webserver.py`, replacing the `process_image()` function with your classifier logic.
    - Ensure the output matches the required schema (see below).
 
