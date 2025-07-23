@@ -17,7 +17,7 @@ theme:
     - navigation.sections
     - navigation.top
     - content.tabs.link
-  logo: img/logo-techcyte.svg
+  logo: img/logo-techcyte-white.svg
   favicon: img/favicon.ico
   icon:
     repo: fontawesome/brands/github
