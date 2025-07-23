@@ -23,7 +23,7 @@ We encourage contributions such as bug fixes, new examples, or documentation imp
    ```
 4. **Make Changes**:
    - Ensure code follows the style guidelines in the repository (e.g., consistent formatting).
-   - Update or add documentation in the relevant `docs/` (e.g., `container-hosting-service` or `api-bridge`).
+   - Update or add documentation in the relevant `docs/` (e.g., `model-hosting-service` or `api-bridge`).
    - Test your changes locally to ensure they work with Techcyte’s system.
 5. **Commit Changes**:
    - Use clear, descriptive commit messages.
@@ -41,7 +41,7 @@ We encourage contributions such as bug fixes, new examples, or documentation imp
 - **Code**:
   - Follow existing code patterns in the repository.
   - Ensure examples are clear, functional, and well-commented.
-  - Test code against Techcyte’s container hosting service or API bridge.
+  - Test code against Techcyte’s model hosting service or API bridge.
 - **Documentation**:
   - Use clear, concise language.
   - Follow Markdown formatting conventions.

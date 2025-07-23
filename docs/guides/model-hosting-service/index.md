@@ -1,23 +1,23 @@
-# Techcyte: Container Hosting Service
+# Techcyte: Model Hosting Service
 
 ## I. Introduction
 
-The Container Hosting Service (CHS) is a standalone product designed to provide GPU-based batch processing for Techcyte users. Using their existing Docker tools, users can easily upload their container image to Techcyte and configure them as custom classifiers on the Techcyte platform.
+The **Model Hosting Service (MHS)** is a standalone product designed to provide GPU-based batch processing for Techcyte users. Using their existing Docker tools, users can easily upload their container image to Techcyte and configure them as custom classifiers on the Techcyte platform.
 
 ## II. Prerequisites
 
 In order to use the ECS you'll need:
 
 1. A Techcyte account with appropriate permission (Lab Admin or Lab User)  
-2. The "Container Hosting Service" feature flag turned on
+2. The "Model Hosting Service" feature flag turned on
 
 ## III. Step-by-Step Instructions
 
-We'll need to: upload your Docker image, define a runnable container type, configure a case algorithm to use the container, and run a task on your slide.
+We'll need to: upload your Docker image, define a runnable container type, configure a case algorithm to use the container, and run a task on your scan.
 
 ### 1: Upload your Docker image
 
-* **Visit the Container Hosting Service page**: From your worklist view, select the Container Hosting Service from the menu dropdown  
+* **Visit the Model Hosting Service page**: From your worklist view, select the Model Hosting Service from the menu dropdown  
 
   ![](images/image10.png)  
 
@@ -72,7 +72,7 @@ From here, we'll need to configure your cases to use your newly created runnable
 
   ![](images/image15.png)
 
-### 4: Run an AI Request on your slide
+### 4: Run an AI Request on your scan
 
 * **Create an AI Request:** From the case view, right click on your scanned image and select "AI Task" or "AI Request" 
 
@@ -88,7 +88,7 @@ At this point your container will start up, and begin processing the image as yo
 
 ## IV. Troubleshooting
 
-Logs will are viewable from the "Jobs and Logs" tab on the Container Hosting Service page.  
+Logs will are viewable from the "Jobs and Logs" tab on the Model Hosting Service page.  
 
 ![](images/image4.png)
 
@@ -98,4 +98,4 @@ Logs will are viewable from the "Jobs and Logs" tab on the Container Hosting Ser
 
 ## V. Conclusion
 
-In a few steps we've uploaded a Docker image, created a runnable container type, defined a case algorithm to use the container, and run an AI task on an uploaded scan. The Container Hosting Service is in active development so new features will be added over time. Images may not be up to date.
+In a few steps we've uploaded a Docker image, created a runnable container type, defined a case algorithm to use the container, and run an AI task on an uploaded scan. The Model Hosting Service is in active development so new features will be added over time. Images may not be up to date.

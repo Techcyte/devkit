@@ -1,6 +1,6 @@
 # Creating a debug request
 
-When debugging external bridges and containers you'll need scan ids, task ids, and image urls. By creating debug request you can view these variables and test locally.
+When debugging external bridges and model containers you'll need scan ids, task ids, and image urls. By creating debug request you can view these variables and test locally.
 
 ## I. Step-by-Step Instructions
 

@@ -8,8 +8,8 @@ This site provides documentation and example code for interfacing with Techcyte'
 ### [API Bridge](./api-bridge.md)
 Provides an example webserver for interfacing with Techcyte as an external model provider. Includes a Techcyte API client, and request/response samples.
 
-### [Container Hosting Service](./container-hosting-service.md)
-Contains example code and documentation for creating your own classification container for deployment in Techcyte's container hosting service.
+### [Model Hosting Service](./model-hosting-service.md)
+Contains example code and documentation for creating your own classification container for deployment in Techcyte's model hosting service.
 
 ### [Guides](./guides/index.md)
 A listing of how-to documents when working on the Techcyte App.
