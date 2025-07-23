@@ -33,7 +33,7 @@ We'll need to: upload your Docker image, define a runnable container type, confi
 
   ![](images/image9.png)
 
-* **Upload your Docker image:** From the command line, in the directory containing your Dockerfile, scripts (example files in VI. Additional Resources, below), execute the four commands shown in the "Docker Push Instructions" modal. Use the "Copy to clipboard" button for long commands. Uploading may take several minutes.  
+* **Upload your Docker image:** From the command line, in the directory containing your Dockerfile, scripts (example files in VI. Additional Resources, below), execute the four commands shown in the "Docker Push Instructions" modal. Use the "Copy to clipboard" button for long commands. Uploading may take several minutes.  Once you've uploaded your image, the image status should say "uploaded".
 
   ![](images/image13.png)
 
@@ -68,7 +68,7 @@ From here, we'll need to configure your cases to use your newly created runnable
   ![](images/image12.png)
   
 
-* **Configure the case algorithm:** Name your algorithm, select "Container" as the Model provider, and select your container.  
+* **Configure the case algorithm:** Name your algorithm, select "Model Hosting Service" as the Model provider, and select your container.  
 
   ![](images/image15.png)
 
