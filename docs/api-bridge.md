@@ -57,6 +57,10 @@ python webserver.py --port 3000 --api-key-id e-_tfr-redacted-Vhjt --api-key-secr
 
 It is possible to run this example with `ngrok` (https://ngrok.com) and process Techcyte images locally for testing (`ngrok http 3000`). But a more robust solution should be implemented for production environments. 
 
+### 4. Deploying
+
+See [creating a debug request](guides/creating-a-debug-request/index.md) for setting up your endpoint in the Techcyte app. The only difference is you will fill in the webhook url with your publicly available url.
+
 ## Results Schema
 ```json
 {

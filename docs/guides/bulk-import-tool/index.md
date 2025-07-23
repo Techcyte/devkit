@@ -59,9 +59,19 @@ If your file's MPP could not automatically be determined, review your scan detai
 ![](./images/image8.png)
 
 ### 10. **Assign to a case**
-At the top of the page click "scan details page". From this page, select "Search for case" and add to your case.
+At the top of the page click "scan details page". From this page, select "Search for case" and add to your case
+(If you don't have one, see [creating a case](../creating-a-case/index.md)).
 
 ![](./images/image10.png)
+
+Alternatively, the scan can be added to your case by visiting your worklist page, and selecting the scans view.
+
+![](./images/image11.png)
+
+Select your image, click "Link to case", and select your case. 
+
+![](./images/image12.png)
+
 
 ## IV. Troubleshooting
 - **DICOM files with base layers over 2GB** in size may present issues for some browsers when attempting de-identification. Try zipping your file, and selecting "Direct upload" on the first bulk import page. **NOTE**: Do not upload any files containing PHI, verify offline.
