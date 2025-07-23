@@ -10,7 +10,7 @@ Using Techcyte's classification webhook system, third-party developers can run t
 ## Webhook variables
 
 - **Supplied in Production**:
-  - `company_id`: Company identififier, useful for billing
+  - `company_id`: Company identifier, useful for billing
   - `scans`: A mapping of scan identifiers to presigned image download url
   - `task_id`: Task identifier
   - `case_id`: The assigned case id (unused for most calls)
