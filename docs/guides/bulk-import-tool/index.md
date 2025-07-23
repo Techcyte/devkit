@@ -5,8 +5,9 @@ The Bulk Import Tool is a utility provided to Techcyte users as a way to upload 
 
 ## II. Prerequisites
 In order to use the Bulk Import Tool you'll need:
-- A Techcyte account with appropriate permission (Lab admin OR Lab user)
-- The "Bulk import tool" feature flag turned on
+
+* A Techcyte account with appropriate permission (Lab admin OR Lab user)
+* The "Bulk import tool" feature flag turned on
 
 ## III. Step-by-Step Instructions
 We'll need to: select the files you want to upload, optionally redact PHI, keep/remove overview/label images, upload, and assign to a case.
@@ -17,7 +18,7 @@ From your worklist view, select Bulk Import from the menu dropdown
 ![](./images/image2.png)
 
 ### 2. **Select your files**
-Click "Select files" or "Select DICOM directory" to select your files. (A test image can be found here: [CMU Openslide Sample](https://openslide.cs.cmu.edu/))  
+Click "Select files" or "Select DICOM directory" to select your files. (A test image can be found here: [CMU Openslide Sample](https://openslide.cs.cmu.edu/download/openslide-testdata/Aperio/CMU-1.svs))  
 
 **NOTE**: Files are modified if you don't select "Direct Upload"
 
@@ -39,7 +40,7 @@ From this page you can review and omit label/overview images contained in the fi
 
 ![](./images/image6.png)
 
-### 6. **Review your upload**
+### 6. **Review before upload**
 Review your file tags/images before uploading, download redacted files, and remove files from upload candidates. Click **Finalize** when ready.
 
 ![](./images/image3.png)
@@ -49,7 +50,7 @@ Click **Start upload** and wait for the upload to complete.
 
 ![](./images/image5.png)
 
-### 8. **Review your upload**
+### 8. **View your uploaded scan**
 Click the link icon next to your image to review your scan.
 
 

@@ -32,6 +32,8 @@ Using Techcyte's classification webhook system, third-party developers can run t
 ```
 # Install requirements with
 # pip install -r requirements.txt
+# openslide-bin may be required depending on your system
+# pip install openslide-bin
 python webserver.py --port 3000 --api-key-id e-_tfr-redacted-Vhjt --api-key-secret FNI-redacted-LvH
 ```
    

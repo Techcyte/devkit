@@ -33,7 +33,11 @@ We'll need to: upload your Docker image, define a runnable container type, confi
 
   ![](images/image9.png)
 
-* **Upload your Docker image:** From the command line, in the directory containing your Dockerfile, scripts (example files in VI. Additional Resources, below), execute the four commands shown in the "Docker Push Instructions" modal. Use the "Copy to clipboard" button for long commands. Uploading may take several minutes.  Once you've uploaded your image, the image status should say "uploaded".
+* **Upload your Docker image:** 
+
+From the command line, in the directory containing your Dockerfile, scripts, execute the four commands shown in the "Docker Push Instructions" modal. See example template files [here](../../model-hosting-service.md).
+
+Use the "Copy to clipboard" button for long commands. Uploading may take several minutes.  Once you've uploaded your image, the image status should say "uploaded".
 
   ![](images/image13.png)
 
@@ -79,7 +83,8 @@ From here, we'll need to configure your cases to use your newly created runnable
   ![](images/image2.png)
 
   NOTE: If an "AI models" request type is not available, you'll need to create one, see [Creating an AI request type](../creating-an-ai-request-type/index.md)
-* Submit the request: From the Create request \-\> AI Task dialog, select your Case algorithm (My GPU Container here) as the AI model and create the request  
+
+* **Submit the request**: From the Create request \-\> AI Task dialog, select your Case algorithm (My GPU Container here) as the AI model and create the request  
 
   ![](images/image8.png)
 
