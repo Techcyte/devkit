@@ -1,8 +1,8 @@
-# External Container Service Docker Template
+# Container Hosting Service Docker Template
 
-The **External Container Service (ECS)** enables Techcyte users to run GPU-based batch processing by uploading custom Docker containers as classifiers. This repository provides a template for developing and testing your container locally or in a production-like environment.
+The **Container Hosting Service (CHS)** enables Techcyte users to run GPU-based batch processing by uploading custom Docker containers as classifiers. This repository provides a template for developing and testing your container locally or in a production-like environment.
 
-We provide template files below that can be built upon and [deployed to the Techcyte infrastructure](guides/external-container-service/index.md).
+We provide template files below that can be built upon and [deployed to the Techcyte infrastructure](guides/container-hosting-service/index.md).
 
 ## Features
 - **Modular Code**: Implement your image processing logic in `main.py`’s `process_image()` function.grid
@@ -25,7 +25,7 @@ We provide template files below that can be built upon and [deployed to the Tech
 ### 1. Clone the Repository:
    ```
    git clone https://github.com/Techcyte/devkit.git
-   cd devkit/src/external-container-service
+   cd devkit/src/container-hosting-service
    ```
 
 ### 2. Customize Your Code
@@ -56,7 +56,7 @@ We provide template files below that can be built upon and [deployed to the Tech
    - Downloads the image, processes it, and posts results to Techcyte. Prints results if posting fails.
 
 ### 5. Deploy
-   - Push your image to the Techcyte external container registry. See instructions [here](guides/external-container-service/index.md).
+   - Push your image to the Techcyte container registry. See instructions [here](guides/container-hosting-service/index.md).
 
 
 ## Example Output (local output)

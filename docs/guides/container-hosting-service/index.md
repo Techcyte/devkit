@@ -1,15 +1,15 @@
-# Techcyte: External Container Service
+# Techcyte: Container Hosting Service
 
 ## I. Introduction
 
-The External Container Service (ECS) is a standalone product designed to provide GPU-based batch processing for Techcyte users. Using their existing Docker tools, users can easily upload their container image to Techcyte and configure them as custom classifiers on the Techcyte platform.
+The Container Hosting Service (CHS) is a standalone product designed to provide GPU-based batch processing for Techcyte users. Using their existing Docker tools, users can easily upload their container image to Techcyte and configure them as custom classifiers on the Techcyte platform.
 
 ## II. Prerequisites
 
 In order to use the ECS you'll need:
 
 1. A Techcyte account with appropriate permission (Lab Admin or Lab User)  
-2. The experimental company "External Container Service" feature flag turned on
+2. The "Container Hosting Service" feature flag turned on
 
 ## III. Step-by-Step Instructions
 
@@ -17,7 +17,7 @@ We'll need to: upload your Docker image, define a runnable container type, confi
 
 ### 1: Upload your Docker image
 
-* **Visit the External Container Service page**: From your worklist view, select the External Container Service from the menu dropdown  
+* **Visit the Container Hosting Service page**: From your worklist view, select the Container Hosting Service from the menu dropdown  
 
   ![](images/image10.png)  
 
@@ -88,7 +88,7 @@ At this point your container will start up, and begin processing the image as yo
 
 ## IV. Troubleshooting
 
-Logs (in development) will be viewable from the "Jobs and Logs" tab on the External Container Service page.  
+Logs will are viewable from the "Jobs and Logs" tab on the Container Hosting Service page.  
 
 ![](images/image4.png)
 
@@ -98,4 +98,4 @@ Logs (in development) will be viewable from the "Jobs and Logs" tab on the Exter
 
 ## V. Conclusion
 
-In a few steps we've uploaded a Docker image, created a runnable container type, defined a case algorithm to use the container, and run an AI task on an uploaded scan. The External Container Service is in active development so new features will be added over time. Images may not be up to date.
+In a few steps we've uploaded a Docker image, created a runnable container type, defined a case algorithm to use the container, and run an AI task on an uploaded scan. The Container Hosting Service is in active development so new features will be added over time. Images may not be up to date.

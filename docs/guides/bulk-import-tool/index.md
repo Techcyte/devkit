@@ -6,7 +6,7 @@ The Bulk Import Tool is a utility provided to Techcyte users as a way to upload 
 ## II. Prerequisites
 In order to use the Bulk Import Tool you'll need:
 - A Techcyte account with appropriate permission (Lab admin OR Lab user)
-- The experimental company "Bulk import tool" feature flag turned on
+- The "Bulk import tool" feature flag turned on
 
 ## III. Step-by-Step Instructions
 We'll need to: select the files you want to upload, optionally redact PHI, keep/remove overview/label images, upload, and assign to a case.

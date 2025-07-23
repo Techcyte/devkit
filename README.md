@@ -1,6 +1,6 @@
 # Techcyte Devkit
 
-This repository provides example documentation and code for interfacing with Techcyte's system. Whether you're integrating with our external container service or leveraging our API bridge, you'll find practical resources to get started quickly.
+This repository provides example documentation and code for interfacing with Techcyte's system. Whether you're integrating with our container hosting service or leveraging our API bridge, you'll find practical resources to get started quickly.
 
 ## Visit the full docs site [here](https://techcyte.github.io/devkit)
 

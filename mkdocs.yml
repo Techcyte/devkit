@@ -65,7 +65,7 @@ plugins:
 nav:
   - Home: index.md
   - API Bridge: api-bridge.md
-  - External Container Service: external-container-service.md
+  - Container Hosting Service: container-hosting-service.md
   - Guides:
     - Intro: guides/index.md
     - Techcyte App: 
@@ -74,7 +74,7 @@ nav:
       - Creating a debug request: guides/creating-a-debug-request/index.md
       - Creating an AI request type: guides/creating-an-ai-request-type/index.md
       - Creating an API key: guides/creating-an-api-key/index.md
-      - External Container Service: guides/external-container-service/index.md
+      - Container Hosting Service: guides/container-hosting-service/index.md
 
     
 
