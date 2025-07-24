@@ -106,11 +106,17 @@ async def background_task_handler(data):
 
         api_key_id = os.environ.get("API_KEY_ID")
         api_key_secret = os.environ.get("API_KEY_SECRET")
+        # jwt is necessary for production environments, not required for local testing
+        jwt_token = data.get("jwt_token")
+
         if not api_key_id or not api_key_secret:
             raise ValueError("API key ID or secret not provided")
 
         client = TechcyteClient(
-            host=TECHCYTE_HOST, api_key_id=api_key_id, api_key_secret=api_key_secret
+            host=TECHCYTE_HOST,
+            jwt_token=jwt_token,
+            api_key_id=api_key_id,
+            api_key_secret=api_key_secret,
         )
         logger.info(f"Posting results for task {data.get('task_id')}")
         client.post_results(data.get("task_id"), result)

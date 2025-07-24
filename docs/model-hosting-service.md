@@ -4,21 +4,28 @@ The **Model Hosting Service (MHS)** enables Techcyte users to run GPU-based batc
 
 We provide template files below that can be built upon and [deployed to the Techcyte infrastructure](guides/model-hosting-service/index.md).
 
-## Features
-- **Modular Code**: Implement your image processing logic in `main.py`’s `process_image()` function.grid
+Code Features:
+
+- **Modularity**: Implement your image processing logic in `main.py`’s `process_image()` function.
 - **Test locally**: Download an image from `SCAN_URL`, process it, and post results to Techcyte using provided environment variables.
 - **GPU Support**: Uses NVIDIA CUDA with a simple GPU test via PyTorch.
 - **Image Handling**: Supports DICOM/SVS/TIFF via `pydicom`, `openslide-python`
 
 ## Environment Variables
 
-  - `SCAN_URL`: Presigned S3 URL for image download.
+Production
+
   - `HOST`: Techcyte host (e.g., `ci.techcyte.com`).
-  - `JWT_TOKEN`: Token for Techcyte API (required for running inside Techcyte).
-  - `API_KEY_ID`: Key id used while running locally
-  - `API_KEY_SECRET`: Key secret used while running locally
   - `TASK_ID`: Task identifier.
   - `SCAN_ID`: Scan identifier.
+  - `SCAN_URL`: Presigned S3 URL for image download.
+  - `JWT_TOKEN`: A task specific jwt token used for authorizing requests to techcyte (not required for local testing)
+
+Local testing
+
+  - `API_KEY_ID`: Key id used while running locally
+  - `API_KEY_SECRET`: Key secret used while running locally
+  
 
 ## Step-by-step instructions
 

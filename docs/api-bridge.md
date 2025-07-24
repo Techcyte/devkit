@@ -1,20 +1,23 @@
 # Building an API Bridge
 
-Using Techcyte's classification webhook system, third-party developers can run their image classification code on their own infrastructure and report results back to Techcyte. When a user creates an image classification task, the webhook is notified with the appropriate variables listed below.
+Using Techcyte's classification webhook system, third-party developers can run their image classification code on their own infrastructure and report results back to Techcyte. When a user creates an image classification task, the webhook is notified with the appropriate variables listed [below](#webhook-variables).
 
-## Example Code Features
+Example Code Features:
+
 - **Modular Code**: Implement your image processing logic in `webserver.py`’s `process_image()` function.
 - **Image Handling**: Support DICOM/SVS/TIFF via `pydicom`, `openslide-python`
 - **Visualization**: On the Techcyte app, four box objects are drawn on the image for result verification.
 
 ## Webhook variables
 
-- **Supplied in Production**:
+**Supplied in Production**:
+
   - `company_id`: Company identifier, useful for billing
   - `scans`: A mapping of scan identifiers to presigned image download url
   - `task_id`: Task identifier
   - `case_id`: The assigned case id (unused for most calls)
   - `model_id`: A user supplied variable used to customize webhook calls
+  - `jwt_token`: A task specific jwt token used for authorizing requests to techcyte (not required for local testing)
 
 
 ## Getting Started
