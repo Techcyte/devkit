@@ -40,7 +40,7 @@ Example Code Features:
 python webserver.py --port 3000 --api-key-id e-_tfr-redacted-Vhjt --api-key-secret FNI-redacted-LvH
 ```
    
-- Mock a techcyte webhook request
+- Mock a techcyte webhook request. See [creating a debug request](guides/creating-a-debug-request/index.md) for test `data` variables.
 ```
  curl -X POST --url "http://localhost:3000/webhook" \  
  --header "Content-Type: application/json" \
