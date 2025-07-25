@@ -55,7 +55,7 @@ Use the "Copy to clipboard" button for long commands. Uploading may take several
 
   ![](images/image16.png)
 
-* **Configure your container:** Set the name, select your image, and AWS runtime instance type. Additional configuration options will be available at a later date (environment vars).  
+* **Configure your container:** Set the name, select your image, and AWS runtime instance type. You can also configure additional environment variables to customize the container behavior. These variables are sent to the container with each invocation, along with the dynamic default pairs (listed [here](../../model-hosting-service.md#environment-variables)).  
 
   ![](images/image5.png)
 
