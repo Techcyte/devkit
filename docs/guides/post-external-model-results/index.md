@@ -1,6 +1,8 @@
 # Posting Results from an External Model
 
-Some requests can trigger a 3rd party AI model to run.
+Some requests can trigger a 3rd party AI model to analyze scans.
+That 3rd party will then be able to post the results of the analysis.
+The REST endpoint where those results may be posted is documented in the [Techcyte Swagger docs](https://api.ci.techcyte.com/docs/#/External%20Results).
 
 ## Results Schema
 
