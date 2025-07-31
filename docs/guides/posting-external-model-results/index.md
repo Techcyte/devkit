@@ -18,7 +18,7 @@ The REST endpoint where those results may be posted is documented in the [Techcy
 | Key | Description | Type |
 | --- | --- | --- |
 | scanId | id of scan | string |
-| results | Free form high level results for the scan. Use if there are high level results for the scan | object |
+| results | Free form high level results for the scan. Use if there are high level results for the scan. | object |
 | geojson | Feature collection containing annotations found on the scan | object (GeoJSON feature collection) |
 
 The `results` object has two special keys: `external_url` and `summary`, both are required to be strings.
