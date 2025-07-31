@@ -18,7 +18,7 @@ The REST endpoint where those results may be posted is documented in the [Techcy
 | Key | Description | Type |
 | --- | --- | --- |
 | scanId | id of scan | string |
-| results | Free form high level results for the scan. Use if there are high level results for the scan | object |
+| results | Free form high level results for the scan. Use if there are high level results for the scan. Note: `"results":{"report":{"summary":{"your_key":"your details here"}}}` will show up in the Techcyte UI. | object |
 | geojson | Feature collection containing annotations found on the scan | object (GeoJSON feature collection) |
 
 #### GeoJSON
@@ -48,7 +48,15 @@ See more information about the GeoJSON standard on the [GeoJSON format standard 
       "scanId": "T1J4hvqyD4",
       "results": {
         "mitosis_count": 550,
-        "external_url": "https://fake.my-app.com/results/for/this/scan"
+        "external_url": "https://fake.my-app.com/results/for/this/scan",
+        "report":
+          {
+            "rois":null,
+            "summary":{
+              "KI67 nuclear positivity":"34.7 %"
+            }
+          }
+        }
       },
       "geojson": {
         "type": "FeatureCollection",
