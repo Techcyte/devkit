@@ -6,22 +6,22 @@ The REST endpoint where those results may be posted is documented in the [Techcy
 
 ## Results Schema
 
-### Result
+### Request Body
 
 | Key | Description | Type |
 | --- | --- | --- |
 | caseResults | Free form results for all scans in the request. Use if there are high level, cross scan results found by the model. | object |
-| scanResults | Array of results for each scan in the request | Array of Objects (ScanResult) |
+| scanResults | Array of results for each scan in the request | array of objects (ScanResult) |
 
-### ScanResult
+#### ScanResult object
 
 | Key | Description | Type |
 | --- | --- | --- |
 | scanId | id of scan | string |
-| results | Free form high level results for the scan. Use if there are high level results for the scan | map |
+| results | Free form high level results for the scan. Use if there are high level results for the scan | object |
 | geojson | Feature collection containing annotations found on the scan | object (GeoJSON feature collection) |
 
-### GeoJSON
+#### GeoJSON
 
 Annotations reported to techcyte will use the GeoJSON standard.
 For each scan the client will report a GeoJSON [`FeatureCollection`](https://datatracker.ietf.org/doc/html/rfc7946#section-3.3) that contains all the annotations reported for that scan.
@@ -34,7 +34,7 @@ Heatmaps may be reported as a set of contours in a single Feature with a geometr
 The contours are `Polygon` geometries and their color is specified with the `contour_colors` key in the properties map of the `GeometryCollection`.
 The `countour_colors` is an array of color hex strings.
 
-See more information about the GeoJSON standard on the format standard website [https://datatracker.ietf.org/doc/html/rfc7946](https://datatracker.ietf.org/doc/html/rfc7946).
+See more information about the GeoJSON standard on the [GeoJSON format standard website](https://datatracker.ietf.org/doc/html/rfc7946).
 
 ## Example
 
