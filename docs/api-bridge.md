@@ -66,37 +66,10 @@ It is possible to run this example with `ngrok` (https://ngrok.com) and process 
 
 See [creating a debug request](guides/creating-a-debug-request/index.md) for setting up your endpoint in the Techcyte app. The only difference is you will fill in the webhook url with your publicly available url.
 
-## Results Schema
-```json
-{
-  "caseResults": {
-    "mitosisCount": 4
-  },
-  "scanResults": [
-    {
-      "scanId": "8615687",
-      "geojson": {
-        "type": "FeatureCollection",
-        "features": [
-          {
-            "type": "Feature",
-            "bbox": [x1, y1, x2, y2],
-            "geometry": {
-              "type": "Polygon",
-              "coordinates": [[[x1,y1], [x1,y2], [x2,y2], [x2,y1], [x1,y1]]]
-            },
-            "properties": {
-              "annotation_type": "tissue_tumor_positive"
-            }
-          }
-        ]
-      }
-    }
-  ]
-}
-```
+## Posting Results
 
-See [Techcyte Swagger Docs](https://api.app.techcyte.com/docs/#/External%20Results/ExternalResults) for more details on posting results.
+You will need to modify the `caseResults` and/or `scanResults` values to see your results on the Techcyte app. See [posting external model results](./guides/posting-external-model-results/index.md).
+
 
 ## Implementation tips
 

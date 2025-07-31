@@ -75,9 +75,7 @@ nav:
       - Creating an AI request type: guides/creating-an-ai-request-type/index.md
       - Creating an API key: guides/creating-an-api-key/index.md
       - Model Hosting Service: guides/model-hosting-service/index.md
-      - Posting External Model Results: guides/post-external-model-results/index.md
-
-
+      - Posting External Model Results: guides/posting-external-model-results/index.md
 
 extra:
   social:
