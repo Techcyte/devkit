@@ -21,6 +21,11 @@ The REST endpoint where those results may be posted is documented in the [Techcy
 | results | Free form high level results for the scan. Use if there are high level results for the scan | object |
 | geojson | Feature collection containing annotations found on the scan | object (GeoJSON feature collection) |
 
+The `results` object has two special keys: `external_url` and `summary`, both are required to be strings.
+If `external_url` is set, then the Techcte UI will create a clickable link to the provided url when displaying the scan results.
+The `summary` for each scan will be displayed at a top level alongside the scans in the ai results panel.
+All other keys will be displayed when viewing algorithm details for each scan.
+
 #### GeoJSON
 
 Annotations reported to techcyte will use the GeoJSON standard.
@@ -48,7 +53,9 @@ See more information about the GeoJSON standard on the [GeoJSON format standard 
       "scanId": "T1J4hvqyD4",
       "results": {
         "mitosis_count": 550,
-        "external_url": "https://fake.my-app.com/results/for/this/scan"
+        "ki67score": .55,
+        "external_url": "https://fake.my-app.com/results/for/this/scan",
+        "summary": "this is my summary"
       },
       "geojson": {
         "type": "FeatureCollection",
