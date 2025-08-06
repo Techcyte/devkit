@@ -25,7 +25,7 @@ git clone https://github.com/Techcyte/devkit.git
 cd devkit/src/download-objects
 ```
 
-Run the script with your api credentials as environment variables and arguments.
+Run the script with your api credentials as environment variables and `scan_id`,`evaluation_id`, and `save_location` as arguments.
 
 ```
 CLIENT_ID=<your_client_id> CLIENT_SECRET=<your_client_secret> python ./get_objects.py --scan_id <your_scan_id> --evaluation_id <your_evaluation_id> --save_location ./objects.json
