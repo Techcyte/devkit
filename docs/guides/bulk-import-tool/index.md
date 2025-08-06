@@ -77,6 +77,7 @@ Select your image, click "Link to case", and select your case.
 ## IV. Troubleshooting
 - **DICOM files with base layers over 2GB** in size may present issues for some browsers when attempting de-identification. Try zipping your file, and selecting "Direct upload" on the first bulk import page. **NOTE**: Do not upload any files containing PHI, verify offline.
 - **Disabling thumbnails** will result in faster load times, especially for SVS/TIFF files, verify they contain no pixel PHI.
+- **For running algorithms in bulk** as you import, see [creating a case policy](../creating-a-case-policy/index.md). 
 
 ## V. Conclusion
 In a few steps we've uploaded a sample SVS file, and reviewed it on the scans page.

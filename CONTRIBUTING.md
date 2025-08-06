@@ -24,7 +24,7 @@ We encourage contributions such as bug fixes, new examples, or documentation imp
 4. **Make Changes**:
    - Ensure code follows the style guidelines in the repository (e.g., consistent formatting).
    - Update or add documentation in the relevant `docs/` (e.g., `model-hosting-service` or `api-bridge`).
-   - Test your changes locally to ensure they work with Techcyte’s system.
+   - Test your changes locally to ensure they work with Techcyte’s system. Run `mkdocs serve` to test locally. Visit http://127.0.0.1:8000 to view locally.
 5. **Commit Changes**:
    - Use clear, descriptive commit messages.
    - Example: `Add example for API bridge authentication flow`.
