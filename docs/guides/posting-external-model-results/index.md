@@ -35,7 +35,7 @@ ______________________________________________________________________
 | --- | --- | --- |
 | model_name | Name of the model | string |
 | provider | Name of the model provider | string |
-| rou | Indicate if the model is for research use only | bool |
+| ruo | Indicate if the model is for research use only | bool |
 | report | Workflow data, must be one of the available workflow data types | WorkflowData |
 
 #### WorkflowData types
