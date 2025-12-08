@@ -18,7 +18,8 @@ Production
   - `HOST`: Techcyte host (e.g., `ci.techcyte.com`).
   - `TASK_ID`: Task identifier.
   - `SCAN_ID`: Scan identifier.
-  - `SCAN_URL`: Presigned S3 URL for image download.
+  - `SCAN_URL`: Presigned S3 URL for image [`.svs`|`.tiff`|`.dcm`] download.
+  - `SCAN_URL_ZIP`:  Presigned S3 URL for `.zip` download (DICOM only, for all layers).
   - `JWT_TOKEN`: A task specific jwt token used for authorizing requests to techcyte (not required for local testing)
 
 Local testing
