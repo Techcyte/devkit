@@ -40,8 +40,15 @@ ______________________________________________________________________
 
 #### WorkflowData types
 
-Currently Techcyte support three different workflow data types: Whole Slide Differential, Area Differential and Semi-Quantitative Differential.
+Currently Techcyte support several different workflow data types: Basic, Whole Slide Differential, Area Differential and Semi-Quantitative Differential.
 Each of these types has a `type` key to identify which type is being used and how to marshal and unmarshal the data.
+
+##### Basic
+| Key | Description | Type |
+| --- | --- | --- |
+| type             | Fixed string identifying the workflow data type                             | "Basic"                                                              |
+| results          | List of named key-value result pairs (e.g., diagnosis, scores, counts)      | array of objects `{name: string, result: string}`                    |
+| segments         | List of named segments/regions with optional text result and GeoJSON annotations (e.g., tumor region, grade zone, mitosis locations) | array of objects `{name: string, result?: string, feature_collection: GeoJSON FeatureCollection}` |
 
 ##### Whole Slide Differential
 
@@ -82,6 +89,142 @@ This object only exists under the `regions` key of the Area Differential type.
 
 ______________________________________________________________________
 
+#### AI Workflow Recipies
+
+Each AI workflow maps to a unique widget displayed in Fusion. Examples added below contain json data posted to the external model results endpoint and the resulting frontend widget displayed.
+
+##### Basic
+
+![](images/image1.png) 
+
+```
+{
+  "caseResults": {},
+  "scanResults": [
+    {
+      "scanId": "8946136",
+      "workflow": {
+        "model_name": "Mitosis Detection Model",
+        "provider": "Acme AI",
+        "ruo": "True",
+        "report": {
+          "type": "Basic",
+          "results": [
+            {
+              "name": "Result",
+              "result": "Benign"
+            },
+            {
+              "name": "Mitosis Count",
+              "result": "4"
+            },
+            {
+              "name": "Dummy Score",
+              "result": "4+"
+            }
+          ],
+          "segments": [
+            {
+              "name": "Tumor",
+              "result": "Percentage: 0.80%",
+              "feature_collection": {
+                "type": "FeatureCollection",
+                "features": []
+              }
+            },
+            {
+              "name": "Mitosis",
+              "result": "",
+              "feature_collection": {
+                "type": "FeatureCollection",
+                "features": [
+                  {
+                    "type": "Feature",
+                    "geometry": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [16716, 8400],
+                          [16716, 13998],
+                          [22314, 13998],
+                          [22314, 8400],
+                          [16716, 8400]
+                        ]
+                      ]
+                    },
+                    "properties": {
+                      "name": "Mitosis",
+                      "color": "#ff0000"
+                    }
+                  },
+                  {
+                    "type": "Feature",
+                    "geometry": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [16716, 30798],
+                          [16716, 36396],
+                          [22314, 36396],
+                          [22314, 30798],
+                          [16716, 30798]
+                        ]
+                      ]
+                    },
+                    "properties": {
+                      "name": "Mitosis",
+                      "color": "#ff0000"
+                    }
+                  },
+                  {
+                    "type": "Feature",
+                    "geometry": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [55746, 8400],
+                          [55746, 13998],
+                          [61344, 13998],
+                          [61344, 8400],
+                          [55746, 8400]
+                        ]
+                      ]
+                    },
+                    "properties": {
+                      "name": "Mitosis",
+                      "color": "#ff0000"
+                    }
+                  },
+                  {
+                    "type": "Feature",
+                    "geometry": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [55746, 30798],
+                          [55746, 36396],
+                          [61344, 36396],
+                          [61344, 30798],
+                          [55746, 30798]
+                        ]
+                      ]
+                    },
+                    "properties": {
+                      "name": "Mitosis",
+                      "color": "#ff0000"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
 #### GeoJSON
 
 Annotations reported to techcyte will use the GeoJSON standard.
@@ -97,7 +240,7 @@ The `countour_colors` is an array of color hex strings.
 
 See more information about the GeoJSON standard on the [GeoJSON format standard website](https://datatracker.ietf.org/doc/html/rfc7946).
 
-## Examples
+## Additional Examples
 
 The following example uses the geojson key to upload objects onto the scan.
 

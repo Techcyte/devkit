@@ -35,24 +35,30 @@ def download_image(url, save_path):
     print(f"Downloaded image to {save_path}")
 
 
-def generate_fake_geojson(width, height, grid_size=2):
-    """Generate fake GeoJSON with boxes in a grid_size x grid_size grid."""
+def generate_fake_geojson(width, height):
+    """
+    Generates a fake GeoJSON with 4 boxes in a 2x2 grid.
+    """
+    box_size = min(width, height) // 8  # Smaller boxes for demonstration
     features = []
-    box_width = width // grid_size
-    box_height = height // grid_size
-    for i in range(grid_size):
-        for j in range(grid_size):
-            x1 = i * box_width
-            y1 = j * box_height
-            x2 = x1 + box_width
-            y2 = y1 + box_height
-            bbox = [x1, y1, x2, y2]
-            coordinates = [[[x1, y1], [x1, y2], [x2, y2], [x2, y1], [x1, y1]]]
+    for i in range(2):
+        for j in range(2):
+            x_center = (width // 4) * (2 * i + 1)
+            y_center = (height // 4) * (2 * j + 1)
+            poly = [
+                [x_center - box_size // 2, y_center - box_size // 2],
+                [x_center - box_size // 2, y_center + box_size // 2],
+                [x_center + box_size // 2, y_center + box_size // 2],
+                [x_center + box_size // 2, y_center - box_size // 2],
+                [
+                    x_center - box_size // 2,
+                    y_center - box_size // 2,
+                ],  # Close the polygon
+            ]
             feature = {
                 "type": "Feature",
-                "bbox": bbox,
-                "geometry": {"type": "Polygon", "coordinates": coordinates},
-                "properties": {"annotation_type": "tissue_tumor_positive"},
+                "geometry": {"type": "Polygon", "coordinates": [poly]},
+                "properties": {"name": "Mitosis", "color": "#ff0000"},
             }
             features.append(feature)
     return {"type": "FeatureCollection", "features": features}
@@ -62,7 +68,7 @@ def process_image(image_path):
     """
     Customize this function with your image processing logic.
     Input: Path to SVS or TIFF file.
-    Output: Dict with 'caseResults' and 'scanResults' per schema.
+    Output: Dict with AI workflow structure including dummy key-value pairs.
     Example: Places 4 boxes in a 2x2 grid on the highest resolution level.
     """
     slide = openslide.OpenSlide(image_path)
@@ -70,16 +76,41 @@ def process_image(image_path):
     geojson = generate_fake_geojson(width, height)
     num_boxes = len(geojson["features"])
     print(f"Generated {num_boxes} fake annotations.")
+
+    # Dummy mitosis count based on number of boxes
+    mitosis_count = num_boxes
+    # Dummy diagnosis
+    diagnosis = "Benign"
+    # Dummy score
+    dummy_score = f"{mitosis_count}+"
+    # Dummy tumor percentage
+    tumor_percentage = f"Percentage: {mitosis_count * 0.2:.2f}%"
+
     return {
-        "caseResults": {"mitosisCount": num_boxes},
-        "scanResults": [
-            {"scanId": os.environ.get("SCAN_ID", "test_scan"), "geojson": geojson}
-        ],
+        "model_name": "Mitosis Detection Model",
+        "provider": "Acme AI",
+        "ruo": True,  # Indicates Research Use Only
+        "report": {
+            "type": "Basic",
+            "results": [
+                {"name": "Result", "result": diagnosis},
+                {"name": "Mitosis Count", "result": str(mitosis_count)},
+                {"name": "Dummy Score", "result": dummy_score},
+            ],
+            "segments": [
+                {
+                    "name": "Tumor",
+                    "result": tumor_percentage,
+                    "feature_collection": {"type": "FeatureCollection", "features": []},
+                },
+                {"name": "Mitosis", "result": "", "feature_collection": geojson},
+            ],
+        },
     }
 
 
 def main():
-    gpu_test()
+    # gpu_test()
 
     required_envs = ["SCAN_URL", "HOST", "TASK_ID", "SCAN_ID"]
     for env in required_envs:
@@ -91,7 +122,7 @@ def main():
 
     # Process image
     print(f"Processing image: {image_path}")
-    results = process_image(image_path)
+    workflow_results = process_image(image_path)
 
     print("Image processing complete. Posting to techcyte...")
     HOST = os.environ["HOST"]
@@ -106,11 +137,16 @@ def main():
         api_key_secret=API_KEY_SECRET,
     )
     try:
-        response = client.post_results(os.environ["TASK_ID"], results)
+        scan_id = os.environ["SCAN_ID"]
+        full_json = {
+            "caseResults": {},
+            "scanResults": [{"scanId": scan_id, "workflow": workflow_results}],
+        }
+        response = client.post_results(os.environ["TASK_ID"], full_json)
         print(f"Success: {response.status_code}")
     except requests.RequestException as e:
         print(f"Error posting results: {str(e)}")
-        print(f"Results JSON (for debugging): {results}")
+        print(f"Results JSON (for debugging): {full_json}")
 
 
 if __name__ == "__main__":
