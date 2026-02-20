@@ -40,10 +40,10 @@ ______________________________________________________________________
 
 #### WorkflowData types
 
-Currently Techcyte support several different workflow data types: Basic, Whole Slide Differential, Area Differential and Semi-Quantitative Differential.
+Currently Techcyte support several different workflow data types: Basic Annotation+Data, Whole Slide Differential, Area Differential and Semi-Quantitative Differential.
 Each of these types has a `type` key to identify which type is being used and how to marshal and unmarshal the data.
 
-##### Basic
+##### Basic Annotation + Data
 | Key | Description | Type |
 | --- | --- | --- |
 | type             | Fixed string identifying the workflow data type                             | "Basic"                                                              |
@@ -93,7 +93,9 @@ ______________________________________________________________________
 
 Each AI workflow maps to a unique widget displayed in Fusion. Examples added below contain json data posted to the external model results endpoint and the resulting frontend widget displayed.
 
-##### Basic
+##### Basic Annotation + Data
+
+Display image annotations and key value data pairs, with the ability to toggle individual classes on and off.
 
 ![](images/image1.png) 
 
