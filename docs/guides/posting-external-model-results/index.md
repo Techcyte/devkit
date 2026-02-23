@@ -89,7 +89,7 @@ This object only exists under the `regions` key of the Area Differential type.
 
 ______________________________________________________________________
 
-#### AI Workflow Recipies
+#### AI Workflow Recipes
 
 Each AI workflow maps to a unique widget displayed in Fusion. Examples added below contain json data posted to the external model results endpoint and the resulting frontend widget displayed.
 
