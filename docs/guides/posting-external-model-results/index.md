@@ -21,6 +21,7 @@ The REST endpoint where those results may be posted is documented in the [Techcy
 | workflow | Object representation of results of full AI workflow | AiWorkflow |
 | results | Free form high level results for the scan. Use if there are high level results for the scan. | object |
 | geojson | Feature collection containing annotations found on the scan | object (GeoJSON feature collection) |
+| qcFailReasons | Array of quality control (qc) failure reasons for the scan. Reasons must be configured in your company | array of string(s) eg: ["blurry"]
 
 The `results` object has two special keys: `external_url` and `summary`, both are required to be strings.
 If `external_url` is set, then the Techcte UI will create a clickable link to the provided url when displaying the scan results.
@@ -260,6 +261,7 @@ The following example uses the geojson key to upload objects onto the scan.
         "external_url": "https://fake.my-app.com/results/for/this/scan",
         "summary": "this is my summary"
       },
+      "qcFailReasons":[],
       "geojson": {
         "type": "FeatureCollection",
         "features": [
@@ -375,6 +377,7 @@ This example uploads a workflow to the scan
   "scanResults": [
     {
       "scanId": "T1J4hvqyD4",
+      "qcFailReasons": [],
       "workflow": {
         "key": "Proliferation Score",
         "model_name": "KI67 Breast-4R",
