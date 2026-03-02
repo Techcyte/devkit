@@ -21,7 +21,7 @@ The REST endpoint where those results may be posted is documented in the [Techcy
 | workflow | Object representation of results of full AI workflow | AiWorkflow |
 | results | Free form high level results for the scan. Use if there are high level results for the scan. | object |
 | geojson | Feature collection containing annotations found on the scan | object (GeoJSON feature collection) |
-| qcFailReasons | Array of quality control (qc) failure reasons for the scan. Reasons must be configured in your company | array of string(s) eg: ["blurry"]
+| qcFailReasons | Array of quality control (qc) failure reasons for the scan. Reasons must be [configured in your company](../creating-a-qc-fail-reason/index.md) | array of string(s) eg: ["blurry"]
 
 The `results` object has two special keys: `external_url` and `summary`, both are required to be strings.
 If `external_url` is set, then the Techcte UI will create a clickable link to the provided url when displaying the scan results.
