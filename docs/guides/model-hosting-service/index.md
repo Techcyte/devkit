@@ -1,4 +1,4 @@
-# Techcyte: Model Hosting Service
+# Techcyte: Model Hosting Service (Deployment Guide)
 
 ## I. Introduction
 
