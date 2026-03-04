@@ -13,6 +13,20 @@ The REST endpoint where those results may be posted is documented in the [Techcy
 | caseResults | Free form results for all scans in the request. Use if there are high level, cross scan results found by the model. | object |
 | scanResults | Array of results for each scan in the request | array of objects (ScanResult) |
 
+The `caseResults` object generally accepts freeform key/value pairs, but also permits a special `triage` key, the value for which is an object of `{"category": string, "score": number}` and populates the worklist "Triage" column.
+For example:
+```
+{
+  "caseResults": {
+    "triage": {
+      "category": "Basaloid",
+      "score": 0.87
+    }
+  },
+  "scanResults": [...]
+}
+```
+
 #### ScanResult object
 
 | Key | Description | Type |
