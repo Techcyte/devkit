@@ -44,9 +44,13 @@ Select your previously created "Debug algorithm" from the Ai model dropdown, and
 
 ### 7. Review task details
 
-Your task details (to be used in local requests) will now be available in the AI results panel
+Your task details (to be used in local requests) will now be available in the Requests section by clicking on the case name at the top of the screen.
 
   ![](images/image7.png)
+
+In the details view:
+
+  ![](images/image8.png)
 
 Example data:
 
