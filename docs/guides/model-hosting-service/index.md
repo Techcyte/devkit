@@ -59,6 +59,21 @@ Use the "Copy to clipboard" button for long commands. Uploading may take several
 
   ![](images/image5.png)
 
+#### Currently available AWS instance types
+
+| Instance Type    | CPUs (vCPUs) | RAM (GB) | VRAM (GB, Card)            |
+|------------------|--------------|----------|----------------------|
+| g4dn.xlarge      | 4            | 16       | 16 (NVIDIA T4)       |
+| g4dn.2xlarge     | 8            | 32       | 16 (NVIDIA T4)       |
+| g4dn.4xlarge     | 16           | 64       | 16 (NVIDIA T4)       |
+| g5.2xlarge       | 8            | 32       | 24 (NVIDIA A10G)     |
+| g5.4xlarge       | 16           | 64       | 24 (NVIDIA A10G)     |
+| g6.2xlarge       | 8            | 32       | 24 (NVIDIA L4)       |
+| g6.4xlarge       | 16           | 64       | 24 (NVIDIA L4)       |
+| g6e.2xlarge      | 8            | 64       | 48 (NVIDIA L40S)     |
+
+Note: Inference time is limited to 90 minutes.
+
 ### 3: Setup a Case algorithm for your container
 
 From here, we'll need to configure your cases to use your newly created runnable container.
