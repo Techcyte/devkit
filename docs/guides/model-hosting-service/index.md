@@ -59,7 +59,7 @@ Use the "Copy to clipboard" button for long commands. Uploading may take several
 
   ![](images/image5.png)
 
-#### Currently available AWS instance types
+#### AWS instance types available
 
 | Instance Type    | CPUs (vCPUs) | RAM (GB) | VRAM (GB, Card)            |
 |------------------|--------------|----------|----------------------|
