@@ -21,6 +21,7 @@ Production
   - `SCAN_URL`: Presigned S3 URL for image [`.svs`|`.tiff`|`.dcm`] download.
   - `SCAN_URL_ZIP`:  Presigned S3 URL for `.zip` download (DICOM only, for all layers).
   - `JWT_TOKEN`: A task specific jwt token used for authorizing requests to techcyte (not required for local testing)
+  - `DEBUG_FILE_UPLOAD_URL`: A presigned url that can be used to upload a debug zip file to (python requests or curl PUT). This file will then be available for download in fusion.
 
 Local testing
 

@@ -5,6 +5,7 @@ import requests
 import openslide
 from PIL import Image, ImageDraw
 from techcyte_client import TechcyteClient
+import zipfile
 
 
 def gpu_test():
@@ -108,6 +109,32 @@ def process_image(image_path):
         },
     }
 
+def post_debug_files():
+    """ Optional helper to post debug files for later inspection
+    This example creates a text file, zips it and uploads to the presigned url.
+    """
+    debug_url = os.environ.get("DEBUG_FILE_UPLOAD_URL")
+
+    if debug_url:
+        # Create a simple text file for demonstration
+        debug_file_path = "/tmp/debug_info.txt"
+        with open(debug_file_path, "w") as f:
+            f.write("This is a debug file for inspection.\n")
+            f.write("Add any relevant debug information here.\n")
+            f.write("Additional files can be added and zipped together for upload. (images, binary files, etc).\n")
+
+        # Zip the file
+        zip_path = "/tmp/debug_files.zip"
+        with zipfile.ZipFile(zip_path, 'w') as zipf:
+            zipf.write(debug_file_path, arcname="debug_info.txt")
+
+        # Upload the zipped file to the presigned URL
+        with open(zip_path, 'rb') as f:
+            response = requests.put(debug_url, data=f, timeout=10)
+            if response.status_code == 200:
+                print("Debug files uploaded successfully.")
+            else:
+                print(f"Failed to upload debug files. Status code: {response.status_code}")
 
 def main():
     # gpu_test()
@@ -148,6 +175,10 @@ def main():
         print(f"Error posting results: {str(e)}")
         print(f"Results JSON (for debugging): {full_json}")
 
+    try:
+        post_debug_files()  # Optional: Post debug files for later inspection
+    except Exception as e:
+        print(f"Error posting debug files: {str(e)}")
 
 if __name__ == "__main__":
     main()
