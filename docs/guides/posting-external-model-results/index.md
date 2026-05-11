@@ -10,22 +10,7 @@ The REST endpoint where those results may be posted is documented in the [Techcy
 
 | Key | Description | Type |
 | --- | --- | --- |
-| caseResults | Free form results for all scans in the request. Use if there are high level, cross scan results found by the model. | object |
 | scanResults | Array of results for each scan in the request | array of objects (ScanResult) |
-
-The `caseResults` object generally accepts freeform key/value pairs, but also permits a special `triage` key, the value for which is an object of `{"category": string, "score": number}` and populates the worklist "Triage" column.
-For example:
-```
-{
-  "caseResults": {
-    "triage": {
-      "category": "Basaloid",
-      "score": 0.87
-    }
-  },
-  "scanResults": [...]
-}
-```
 
 #### ScanResult object
 
@@ -112,11 +97,10 @@ Each AI workflow maps to a unique widget displayed in Fusion. Examples added bel
 
 Display image annotations and key value data pairs, with the ability to toggle individual classes on and off.
 
-![](images/image1.png) 
+![](images/image1.png)
 
 ```
 {
-  "caseResults": {},
   "scanResults": [
     {
       "scanId": "8946136",
@@ -500,4 +484,111 @@ This example uploads a workflow to the scan
     }
   ]
 }
+```
+
+______________________________________________________________________
+
+## Reading Case Evaluations
+
+After results have been posted for a task, you can retrieve all evaluations associated with the task's case using the `GET /external/case_evaluations/{task_id}` endpoint.
+
+This requires a task token with read permission on all scan evaluations in the case.
+
+### Request
+
+```
+GET /api/v3/external/case_evaluations/{task_id}
+Authorization: Bearer <task_token>
+```
+
+### Response
+
+Returns an array of evaluation objects. Each evaluation includes the `details` blob that was stored when results were posted, which contains the `workflow`, `report`, and any other data submitted via `POST /external/results/{task_id}`.
+
+```json
+[
+  {
+    "id": 1,
+    "sample_id": 42,
+    "case_id": 7,
+    "task_id": 174590,
+    "details": {
+      "workflow": {
+        "model_name": "example_model",
+        "provider": "example_provider",
+        "ruo": true,
+        "report": {
+          "type": "Basic",
+          "results": [
+            {
+              "name": "Triage score",
+              "result": "0.75"
+            }
+          ],
+          "segments": []
+        }
+      }
+    }
+  },
+  {
+    "id": 2,
+    "sample_id": 43,
+    "case_id": 7,
+    "task_id": 174590,
+    "details": {
+      "workflow": {
+        "model_name": "example_model",
+        "provider": "example_provider",
+        "ruo": true,
+        "report": {
+          "type": "Basic",
+          "results": [
+            {
+              "name": "Triage score",
+              "result": "0.25"
+            }
+          ],
+          "segments": []
+        }
+      }
+    }
+  },
+]
+```
+
+______________________________________________________________________
+
+## Updating a Case
+
+You can update fields on the case associated with a task using `PATCH /external/case/{task_id}`.
+
+This requires a task token with write permission on the task's case.
+
+### Request Body
+
+Currently supported fields include:
+| Key | Description | Type |
+| --- | --- | --- |
+| triage_category | Triage category label | string |
+| triage_score | Numeric triage score  | number |
+
+At least one field must be provided. Fields that are omitted are left unchanged.
+
+### Request
+
+```
+PATCH /api/v3/external/case/{task_id}
+Authorization: Bearer <task_token>
+Content-Type: application/json
+
+{
+  "triage_category": "High",
+  "triage_score": 0.50
+}
+```
+
+### Response
+
+```
+HTTP/1.1 204 No Content
 ```
