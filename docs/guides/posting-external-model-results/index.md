@@ -463,6 +463,9 @@ Reports tumor cellularity for one or more thresholds.
 | --- | --- | --- |
 | type | Fixed string identifying the report type | `"TumorCellularity"` |
 | threshold_map | Map of threshold label to the result measured at that threshold | map from string to object (ThresholdResult) |
+| other_segments | Optional additional annotation layers, grouped by a display name of your choosing. May be omitted or `null`. | map from string to array of objects `{name: string, result: string, feature_collection: GeoJSON FeatureCollection}` |
+
+The group names in `other_segments` are not a fixed list — any name may be used, and each group holds segments in the same shape as the `segments` field of the [`Basic`](#basic) report.
 
 #### ThresholdResult object
 
@@ -544,6 +547,68 @@ Reports tumor cellularity for one or more thresholds.
               "area": 30.5,
               "distributions": null
             }
+          },
+          "other_segments": {
+            "Tissue QC": [
+              {
+                "name": "Blurry",
+                "result": "Percentage: 11.00%",
+                "feature_collection": {
+                  "type": "FeatureCollection",
+                  "features": []
+                }
+              }
+            ],
+            "Tissue segmentation": [
+              {
+                "name": "Tumor",
+                "result": "Percentage: 100.00%",
+                "feature_collection": {
+                  "type": "FeatureCollection",
+                  "features": [
+                    {
+                      "type": "Feature",
+                      "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [
+                          [
+                            [23928, 56064],
+                            [23920, 56072],
+                            [23904, 56072],
+                            [24072, 56064],
+                            [23928, 56064]
+                          ]
+                        ]
+                      },
+                      "properties": {
+                        "color": "#0000FF"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "Cell classification": [
+              {
+                "name": "Cancer",
+                "result": "Count: 12000",
+                "feature_collection": {
+                  "type": "FeatureCollection",
+                  "features": [
+                    {
+                      "type": "Feature",
+                      "geometry": {
+                        "type": "Point",
+                        "coordinates": [23928, 56064]
+                      },
+                      "properties": {
+                        "color": "#FF0000"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         }
       }
