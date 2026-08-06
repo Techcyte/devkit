@@ -14,6 +14,11 @@ Example Code Features:
 
   - `company_id`: Company identifier, useful for billing
   - `scans`: A mapping of scan identifiers to presigned image download url
+  - `scan_urls`: A mapping of scan identifiers to **every** presigned download url for that scan. A DICOM series is stored as many objects, so it yields one url per file; `SVS`/`TIFF` scans (and unprocessed single-file DICOM) yield a single url. `scans` holds only the first url of each list, so prefer `scan_urls` if you handle DICOM series or similar and need more than just the base layer.
+  - `stains`: A mapping of scan identifiers to that scan's stain metadata. Scans with no recorded stain are left out of the map, so it may be empty or absent entirely. Each entry has:
+      - `value`: The stain recorded on the scan, as free-form text. The slide's stain wins over the scan's own stain when both are set.
+      - `stain_code`: The matching stain code configured for your company. Omitted when `value` does not match a configured stain.
+      - `label`: The display label of that configured stain. Omitted alongside `stain_code`.
   - `task_id`: Task identifier
   - `case_id`: The assigned case id (unused for most calls)
   - `model_id`: A user supplied variable used to customize webhook calls
@@ -39,15 +44,21 @@ Example Code Features:
 # pip install openslide-bin
 python webserver.py --port 3000 --api-key-id e-_tfr-redacted-Vhjt --api-key-secret FNI-redacted-LvH
 ```
-   
+
 - Mock a techcyte webhook request. See [creating a debug request](guides/creating-a-debug-request/index.md) for test `data` variables.
 ```
- curl -X POST --url "http://localhost:3000/webhook" \  
+ curl -X POST --url "http://localhost:3000/webhook" \
  --header "Content-Type: application/json" \
  --data '{ \
     "company_id": "2380941", \
     "scans": { \
       "8823846": "https://techcyteci-preprod.s3.us-west-2.amazonaws.com/redacted" \
+    }, \
+    "scan_urls": { \
+      "8823846": ["https://techcyteci-preprod.s3.us-west-2.amazonaws.com/redacted"] \
+    }, \
+    "stains": { \
+      "8823846": { "value": "HE", "stain_code": "HE", "label": "H&E" } \
     }, \
     "case_id": "aHVtYW5DYXNlOjI0MjEzNjY=", \
     "task_id": "dGFzazoxODU4MzU=", \
@@ -60,7 +71,7 @@ python webserver.py --port 3000 --api-key-id e-_tfr-redacted-Vhjt --api-key-secr
    - Ensure the output matches the required schema (see below).
 
 
-It is possible to run this example with `ngrok` (https://ngrok.com) and process Techcyte images locally for testing (`ngrok http 3000`). But a more robust solution should be implemented for production environments. 
+It is possible to run this example with `ngrok` (https://ngrok.com) and process Techcyte images locally for testing (`ngrok http 3000`). But a more robust solution should be implemented for production environments.
 
 ### 4. Deploying
 

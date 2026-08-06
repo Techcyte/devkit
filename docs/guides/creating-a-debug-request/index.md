@@ -8,33 +8,33 @@ We'll need to: visit the case algorithms page, create a new debug algorithm, and
 
 ### 1: Visit the company configuration page
 
-From your worklist view, click the dropdown menu, select Company settings -> configuration 
+From your worklist view, click the dropdown menu, select Company settings -> configuration
 
-  ![](images/image1.png) 
+  ![](images/image1.png)
 
 ### 2: Create a new case algorithm
 
 From company configuration, click the case algorithms tab, then click the plus (+) button to add a new case algorithm
 
-  ![](images/image2.png) 
+  ![](images/image2.png)
 
 ### 3: Configure case algorithm
 
 Name the algorithm "Debug" or something similar, set the model type to "External" and leave the webhook url blank. **When the url is blank, webhook calls are skipped and the post request information is added to the task notes.** Create when done.
 
-  ![](images/image3.png) 
+  ![](images/image3.png)
 
 ### 4. Return to the worklist
 
 Select your case. If you do not have one see [creating a case](../creating-a-case/index.md)
 
-  ![](images/image4.png) 
+  ![](images/image4.png)
 
 ### 5. Create a new AI request
 
 On the image in your case (if you don't have one, use the [bulk scan import tool](../bulk-import-tool/index.md)), right click, select "Create request" -> "AI Request". If you don't see this, see [creating an AI request type](../creating-an-ai-request-type/index.md).
 
-  ![](images/image5.png) 
+  ![](images/image5.png)
 
 ### 6. Configure a debug AI request
 
@@ -60,6 +60,18 @@ Example data:
   "scans": {
     "8823846": "https://techcyteci-preprod.s3.us-west-2.amazonaws.com/files_uuid/1414532c-2954-4673-5e7c-1bbf8b33359b.8061860?X-Amz-Algorithm=AWS4-HMAC-SHA256\u0026X-Amz-Credential=redacted"
   },
+  "scan_urls": {
+    "8823846": [
+      "https://techcyteci-preprod.s3.us-west-2.amazonaws.com/files_uuid/1414532c-2954-4673-5e7c-1bbf8b33359b.8061860?X-Amz-Algorithm=AWS4-HMAC-SHA256\u0026X-Amz-Credential=redacted"
+    ]
+  },
+  "stains": {
+    "8823846": {
+      "value": "HE",
+      "stain_code": "HE",
+      "label": "H&E"
+    }
+  },
   "case_id": "aHVtYW5DYXNlOjI0MjEzNjY=",
   "task_id": "dGFzazoxODU3MTQ=",
   "model_name": ""
@@ -67,3 +79,11 @@ Example data:
 ```
 
 **Note**: The `scans` field is a mapping from `scan_id` to `scan_url`.
+
+**Note**: The `scan_urls` field is a mapping from `scan_id` to the full list of urls for that scan.
+For example, a DICOM series is stored as many files, so it produces one url per file.
+`scans` holds only the first url from each list, so use `scan_urls` if you need every file.
+
+**Note**: The `stains` field is a mapping from `scan_id` to the stain metadata for that scan.
+`value` is the stain recorded on the scan as free-form text (the slide's stain wins over the scan's own stain when both are set); `stain_code` and `label` are filled in only when `value` matches a stain configured for your company.
+Scans with no recorded stain are omitted from the map.
