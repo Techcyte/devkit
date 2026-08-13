@@ -1,0 +1,9 @@
+:root {
+  --md-primary-fg-color: #3F61E7;
+  --md-accent-fg-color: #9225FC;
+}
+
+/* Target the text paths (first <g> group in the SVG) */
+svg#Layer_1 g:first-child path {
+    fill: #EAEFF6;
+}
