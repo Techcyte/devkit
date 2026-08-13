@@ -22,9 +22,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3.9-distutils \
     && rm -rf /var/lib/apt/lists/*
 
-# Install pip for Python 3.9
-RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.9 \
-    && python3.9 -m pip install --upgrade pip
+# Install pip for Python 3.9 (3.9-specific bootstrap; the generic one requires >=3.10)
+RUN curl -sS https://bootstrap.pypa.io/pip/3.9/get-pip.py | python3.9
 
 # Ensure python3 and pip3 point to Python 3.9
 RUN PIP3_9_PATH=$(find /usr/local/bin -name pip3.9 2>/dev/null | head -n 1) \
@@ -35,7 +34,7 @@ RUN PIP3_9_PATH=$(find /usr/local/bin -name pip3.9 2>/dev/null | head -n 1) \
 RUN pip3 install --no-cache-dir \
     torch==2.0.1+cu118 -f https://download.pytorch.org/whl/torch_stable.html \
     requests \
-    pillow \ 
+    pillow \
     openslide-python \
     openslide-bin
 
