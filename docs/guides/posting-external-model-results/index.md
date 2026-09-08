@@ -850,3 +850,121 @@ Content-Type: application/json
 ```
 HTTP/1.1 204 No Content
 ```
+
+______________________________________________________________________
+
+## Uploading a Scan
+
+A model can add a scan of its own — typically a restain — derived from one of the scans it was given in the AI request.
+This takes three calls: register the scan, PUT the image to the presigned URL you get back, then say the upload finished.
+
+```
+POST /external/result_scan/{task_id}    -> presigned upload URL
+PUT  <uploadUrl>                        -> the image bytes
+POST /external/complete_scan/{task_id}  -> starts preprocessing
+```
+
+All of this requires a task token with write or write-results permission on the task.
+
+The new scan gets a **slide of its own** carrying the source slide's specimen, block and slide number, so a restain shows up beside the slide it came from rather than as another scan of it.
+The source slide's stain is deliberately not carried over — a new slide in the same place is usually stained differently — so set `stain` to say what the new one is stained with, or leave it unset.
+If the source scan has no slide, no slide is made and the new scan simply joins the task's case.
+
+The new scan joins the task's **case** but is **not** added to the task's list of scans.
+The task token carries per-scan permissions for the AI request's scans only, so the new scan is not one you can post results for under the same task.
+
+### Register the Scan
+
+| Key | Description | Type |
+| --- | --- | --- |
+| sourceScanId | The scan from the AI request the new scan is derived from, as a numeric string. May be omitted when the task has exactly one scan. | string |
+| micronsPerPixel | Resolution of the image. Used to pick the acquisition when set. | number |
+| label | Label for the new scan. Defaults to the source scan's label. | string |
+| stain | Stain of the slide the new scan lands on. Left unset when omitted. | string |
+
+`sourceScanId` must name one of the task's scans; anything else is rejected.
+Omitting it on a task with more than one scan is also rejected, since there is no obvious source to derive from.
+
+```
+POST /api/v3/external/result_scan/{task_id}
+Authorization: Bearer <task_token>
+Content-Type: application/json
+
+{
+  "sourceScanId": "1234",
+  "micronsPerPixel": 0.25,
+  "label": "Restained",
+  "stain": "Virtual IHC"
+}
+```
+
+```
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "scanId": "1235",
+  "regionId": 4321,
+  "uploadUrl": "https://<presigned-url>"
+}
+```
+
+### Upload the Image
+
+PUT the image bytes to `uploadUrl` as-is. The URL signs no headers, so no `Content-Type` is needed, and it **expires after 15 minutes**.
+
+DICOM goes up as a single `.zip` of the study — one call hands back one URL for one object, so an archive is the only way a multi-file series can arrive.
+There is no mimetype to send either way: preprocessing identifies the file itself.
+
+```
+PUT <uploadUrl>
+
+<image bytes>
+```
+
+### Finish the Upload
+
+POST the `scanId` you got back to mark the scan uploaded and start preprocessing, and from there classification.
+
+Only a scan created by the same task can be completed here.
+The call is safe to repeat and safe to make after the upload has already been noticed on the storage side — preprocessing is only started once.
+
+```
+POST /api/v3/external/complete_scan/{task_id}
+Authorization: Bearer <task_token>
+Content-Type: application/json
+
+{
+  "scanId": "1235"
+}
+```
+
+```
+HTTP/1.1 204 No Content
+```
+
+______________________________________________________________________
+
+## Completing a Task
+
+`POST /external/complete_task/{task_id}` marks the task complete once the model has finished its work on it.
+
+Most models never need it: posting results to `/external/results/{task_id}` completes the task on its own.
+It is for the scan-upload flow, where a model may add several scans across several calls and nothing on the platform side knows which upload is the last one, so the model says when it is done.
+Completing a task through this endpoint behaves like completing it any other way, including running the case policies that trigger on `request:complete`.
+
+This requires a task token with write or write-results permission on the task.
+A task that is already complete is left as it is, so repeating the call is harmless.
+
+### Request
+
+```
+POST /api/v3/external/complete_task/{task_id}
+Authorization: Bearer <task_token>
+```
+
+### Response
+
+```
+HTTP/1.1 204 No Content
+```
