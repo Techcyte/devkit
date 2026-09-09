@@ -861,7 +861,7 @@ This takes three calls: register the scan, PUT the image to the presigned URL yo
 ```
 POST /external/result_scan/{task_id}    -> presigned upload URL
 PUT  <uploadUrl>                        -> the image bytes
-POST /external/complete_scan/{task_id}  -> starts preprocessing
+POST /external/complete_scan/{task_id}  -> marks the scan uploaded
 ```
 
 All of this requires a task token with write or write-results permission on the task.
@@ -924,10 +924,12 @@ PUT <uploadUrl>
 
 ### Finish the Upload
 
-POST the `scanId` you got back to mark the scan uploaded and start preprocessing, and from there classification.
+POST the `scanId` you got back to mark the scan uploaded.
 
-Only a scan created by the same task can be completed here.
-The call is safe to repeat and safe to make after the upload has already been noticed on the storage side — preprocessing is only started once.
+This call will move the scan status out of **Waiting for upload** and the automated preprocessing steps will progress the status to **Processing complete** once finished.
+A scan that is never marked as finished uploading here still processes, but its status stays at **Waiting for upload** and never shows the result.
+
+Only a scan created by the same task can be completed here, and the call is safe to repeat.
 
 ```
 POST /api/v3/external/complete_scan/{task_id}
@@ -942,6 +944,16 @@ Content-Type: application/json
 ```
 HTTP/1.1 204 No Content
 ```
+
+The `204` says the scan was accepted, not that processing is done.
+Processing runs in the background, and the scan moves through these statuses as it goes:
+
+| Status | API value | Meaning |
+| --- | --- | --- |
+| Waiting for upload | `waiting_for_upload` | The image is not in storage yet, or the scan has not been completed. |
+| Processing | `processing` | Preprocessing is running. |
+| Processing complete | `processing_complete` | The scan is ready to view, with any objects its model found. |
+| Error | `error` | Something failed — most often an unreadable image. |
 
 ______________________________________________________________________
 
