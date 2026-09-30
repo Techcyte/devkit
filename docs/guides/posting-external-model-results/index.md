@@ -980,3 +980,41 @@ Authorization: Bearer <task_token>
 ```
 HTTP/1.1 204 No Content
 ```
+
+______________________________________________________________________
+
+## Failing a Task
+
+`POST /external/fail_task/{task_id}` marks the task terminally failed, for a run that will never produce results — the model crashed, a scan could not be read, or a dependency the model relies on is down.
+
+Posting results and [completing a task](#completing-a-task) both mean success, so without this call a task nothing will ever report on stays *In Progress* forever.
+A failed task is not retried or reopened; to try again, the user creates a new request.
+Unlike completing a task, failing one does not run the case policies that trigger on `request:complete`.
+
+The request body is optional. When sent, the optional `note` says why the run failed and is appended to the task's note.
+The note is only added when this call is the one that failed the task.
+
+| Key | Description | Type |
+| --- | --- | --- |
+| note | Why the run failed. Appended to the task's note. | string |
+
+This requires a task token with write or write-results permission on the task.
+A task that is already complete or failed is left as it is, so repeating the call is harmless, and a failure reported after results were already written does not undo them.
+
+### Request
+
+```
+POST /api/v3/external/fail_task/{task_id}
+Authorization: Bearer <task_token>
+Content-Type: application/json
+
+{
+  "note": "External model processing failed"
+}
+```
+
+### Response
+
+```
+HTTP/1.1 204 No Content
+```
