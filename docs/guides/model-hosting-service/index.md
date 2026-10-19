@@ -37,6 +37,8 @@ We'll need to: upload your Docker image, define a runnable container type, confi
 
 From the command line, in the directory containing your Dockerfile, scripts, execute the four commands shown in the "Docker Push Instructions" modal. See example template files [here](../../model-hosting-service.md).
 
+To script this step, and the container step below, use `mhs.sh` from the template instead. See its [README](https://github.com/Techcyte/devkit/blob/main/src/model-hosting-service/README.md).
+
 Use the "Copy to clipboard" button for long commands. Uploading may take several minutes.  Once you've uploaded your image, the image status should say "uploaded".
 
   ![](images/image13.png)

@@ -65,7 +65,12 @@ Local testing
    - Downloads the image, processes it, and posts results to Techcyte. Prints results if posting fails.
 
 ### 5. Deploy
-   - Push your image to the Techcyte container registry. See instructions [here](guides/model-hosting-service/index.md).
+   - Push your image to the Techcyte container registry. See instructions [here](guides/model-hosting-service/index.md), or use `mhs.sh` to do it from the command line (see [below](#deploying-from-the-command-line)).
+
+
+## Deploying from the command line
+
+`src/model-hosting-service/mhs.sh` does what the Model Hosting Service pages do, using an API client instead of the Techcyte app: it creates images and pushes to them, and creates, updates, lists and deletes containers. See its [README](https://github.com/Techcyte/devkit/blob/main/src/model-hosting-service/README.md) for usage.
 
 
 ## Example Output (local output)
