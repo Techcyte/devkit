@@ -94,7 +94,11 @@ Display image annotations and key value data pairs, with the ability to toggle i
 | --- | --- | --- |
 | type | Fixed string identifying the report type | `"Basic"` |
 | results | List of named key-value result pairs (e.g., diagnosis, scores, counts) | array of objects `{name: string, result: string}` |
-| segments | List of named segments/regions with an optional text result and GeoJSON annotations (e.g., tumor region, grade zone, mitosis locations) | array of objects `{name: string, result: string, feature_collection: GeoJSON FeatureCollection}` |
+| segments | List of named segments/regions with an optional text result and GeoJSON annotations (e.g., tumor region, grade zone, mitosis locations) | array of objects `{name: string, result: string, feature_collection: GeoJSON FeatureCollection, hidden_by_default?: bool}` |
+
+Each segment is an annotation group the viewer can toggle on and off.
+Set the optional `hidden_by_default` key to `true` to have a segment start toggled off when the results are opened; the viewer can still turn it on.
+Omitting it (or sending `false`) shows the segment as usual.
 
 ![](images/image1.png)
 
@@ -463,9 +467,13 @@ Reports tumor cellularity for one or more thresholds.
 | --- | --- | --- |
 | type | Fixed string identifying the report type | `"TumorCellularity"` |
 | threshold_map | Map of threshold label to the result measured at that threshold | map from string to object (ThresholdResult) |
-| other_segments | Optional additional annotation layers, grouped by a display name of your choosing. May be omitted or `null`. | map from string to array of objects `{name: string, result: string, feature_collection: GeoJSON FeatureCollection}` |
+| other_segments | Optional additional annotation layers, grouped by a display name of your choosing. May be omitted or `null`. | map from string to array of objects `{name: string, result: string, feature_collection: GeoJSON FeatureCollection, hidden_by_default?: bool}` |
 
-The group names in `other_segments` are not a fixed list — any name may be used, and each group holds segments in the same shape as the `segments` field of the [`Basic`](#basic) report.
+The group names in `other_segments` are not a fixed list — any name may be used, and each group holds segments in the same shape as the `segments` field of the [`Basic`](#basic) report, including the optional `hidden_by_default` key.
+A segment with `hidden_by_default: true` starts toggled off, and every other segment starts visible, just as for `Basic`.
+Mark the segments you want hidden with `hidden_by_default`.
+Reports that mark no segments currently fall back to a legacy default, where only segments named `Carcinoma Cell` start visible.
+That fallback will be removed.
 
 #### ThresholdResult object
 
