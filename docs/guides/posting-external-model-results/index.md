@@ -638,7 +638,7 @@ Each GeoJSON feature contains a geometry that can be one of multiple types.
 In the example below there is a [`Polygon`](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.6), a [`MultiPoint`](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.3) and a [`GeometryCollection`](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.8).
 
 Heatmaps may be reported as a set of contours in a single Feature with a geometry type of `GeometryCollection`.
-The contours are `Polygon` geometries and their color is specified with the `contour_colors` key in the properties map of the `GeometryCollection`.
+The contours are [`MultiPolygon`](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.7) geometries and their color is specified with the `contour_colors` key in the properties map of the `GeometryCollection`.
 The `contour_colors` value is an array of color hex strings.
 
 See more information about the GeoJSON standard on the [GeoJSON format standard website](https://datatracker.ietf.org/doc/html/rfc7946).
@@ -684,38 +684,44 @@ The following example uses the `geojson` key to upload objects onto the scan.
               "type": "GeometryCollection",
               "geometries": [
                 {
-                  "type": "Polygon",
+                  "type": "MultiPolygon",
                   "coordinates": [
                     [
-                      [ 1, 2 ],
-                      [ 3, 2 ],
-                      [ 3, 5 ],
-                      [ 1, 5 ],
-                      [ 1, 2 ]
+                      [
+                        [ 1, 2 ],
+                        [ 3, 2 ],
+                        [ 3, 5 ],
+                        [ 1, 5 ],
+                        [ 1, 2 ]
+                      ]
                     ]
                   ]
                 },
                 {
-                  "type": "Polygon",
+                  "type": "MultiPolygon",
                   "coordinates": [
                     [
-                      [ 2, 3 ],
-                      [ 4, 3 ],
-                      [ 4, 6 ],
-                      [ 2, 6 ],
-                      [ 2, 3 ]
+                      [
+                        [ 2, 3 ],
+                        [ 4, 3 ],
+                        [ 4, 6 ],
+                        [ 2, 6 ],
+                        [ 2, 3 ]
+                      ]
                     ]
                   ]
                 },
                 {
-                  "type": "Polygon",
+                  "type": "MultiPolygon",
                   "coordinates": [
                     [
-                      [ 3, 4 ],
-                      [ 5, 4 ],
-                      [ 5, 7 ],
-                      [ 3, 7 ],
-                      [ 3, 4 ]
+                      [
+                        [ 3, 4 ],
+                        [ 5, 4 ],
+                        [ 5, 7 ],
+                        [ 3, 7 ],
+                        [ 3, 4 ]
+                      ]
                     ]
                   ]
                 }
