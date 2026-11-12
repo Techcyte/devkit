@@ -100,6 +100,46 @@ Each segment is an annotation group the viewer can toggle on and off.
 Set the optional `hidden_by_default` key to `true` to have a segment start toggled off when the results are opened; the viewer can still turn it on.
 Omitting it (or sending `false`) shows the segment as usual.
 
+#### Heatmap segments
+
+A segment can hold a heatmap: a `Feature` whose geometry is a `GeometryCollection` of `MultiPolygon` contours, colored by `contour_colors` (see [GeoJSON](#geojson)).
+The segment's toggle in the results widget takes the `color` of the segment's first feature, and is black without one, so set `color` on the heatmap feature to give the toggle a matching color.
+
+To explain what the contour colors mean, add an optional `legend` to the heatmap feature's `properties`.
+The viewer can expand it under the segment.
+
+| `legend.type` | Use for | Other keys |
+| --- | --- | --- |
+| `"discrete"` | Contours that are separate classes (e.g., tissue types or grades) | `labels`: array of strings, one per entry in `contour_colors`, in the same order |
+| `"continuous"` | Contours that are bands of one value (e.g., cell density) | `min`, `max`: string or number labels for the first and last entries in `contour_colors` |
+
+The legend takes its colors from `contour_colors`, so it always matches the heatmap.
+Labels too long to fit are shortened, with the full text shown on hover.
+A legend that doesn't fit its heatmap is not shown, and the heatmap itself is unaffected: for example, a `discrete` legend whose `labels` count differs from `contour_colors`, a `continuous` legend missing `min` or `max`, or an unknown `type`.
+If a segment holds more than one heatmap, the legend of the first heatmap that has one is shown.
+
+The `properties` of a heatmap feature with a discrete legend:
+
+```json
+{
+  "name": "Tissue class",
+  "color": "#795548",
+  "contour_colors": ["#F44336", "#2196F3", "#795548"],
+  "legend": { "type": "discrete", "labels": ["Tumor", "Stroma", "Necrosis"] }
+}
+```
+
+And with a continuous legend:
+
+```json
+{
+  "name": "Cell density",
+  "color": "#0D47A1",
+  "contour_colors": ["#BBDEFB", "#42A5F5", "#0D47A1"],
+  "legend": { "type": "continuous", "min": 0, "max": "500 cells/mm²" }
+}
+```
+
 ![](images/image1.png)
 
 ```json
@@ -469,7 +509,7 @@ Reports tumor cellularity for one or more thresholds.
 | threshold_map | Map of threshold label to the result measured at that threshold | map from string to object (ThresholdResult) |
 | other_segments | Optional additional annotation layers, grouped by a display name of your choosing. May be omitted or `null`. | map from string to array of objects `{name: string, result: string, feature_collection: GeoJSON FeatureCollection, hidden_by_default?: bool}` |
 
-The group names in `other_segments` are not a fixed list — any name may be used, and each group holds segments in the same shape as the `segments` field of the [`Basic`](#basic) report, including the optional `hidden_by_default` key.
+The group names in `other_segments` are not a fixed list — any name may be used, and each group holds segments in the same shape as the `segments` field of the [`Basic`](#basic) report, including the optional `hidden_by_default` key and [heatmap legends](#heatmap-segments).
 A segment with `hidden_by_default: true` starts toggled off, and every other segment starts visible, just as for `Basic`.
 Mark the segments you want hidden with `hidden_by_default`.
 Reports that mark no segments currently fall back to a legacy default, where only segments named `Carcinoma Cell` start visible.
